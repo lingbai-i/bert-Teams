@@ -6,7 +6,7 @@
 
 | 分支 | 用途 | 保护规则 |
 |------|------|----------|
-| `main` | 稳定发布线，只保留经过验证、可正常运行的代码 | 禁止直接 push；必须走 PR 且经负责人审核批准后合并 |
+| `main` | 稳定发布线，只保留经过验证、可正常运行的代码 | 禁止直接 push；必须走 PR 且经审核批准后合并 |
 | `dev` | 开发集成分支，所有功能开发的合流点 | 禁止直接 push；必须走 PR，无需审核即可合并 |
 | 个人开发分支 | 从 `dev` 拉出，用于具体功能或修复的开发 | 无保护，成员可自由 push |
 
@@ -15,21 +15,7 @@
 - `main` 与 `dev` 禁止直接提交、禁止 force push、禁止删除分支，以上均由服务端强制拦截。
 - 任何代码变更必须以 PR 形式进入 `dev`，保证每一条变更有记录、有 diff 可查。
 - `main` 只接受来自 `dev` 的合并，不接受其他来源。
-- 组织内后续新建的仓库（如 RAG、Agent、模型微调等项目）沿用相同的分支模型与保护规则。
 - 个人分支命名建议：`<姓名>/<功能描述>` 或 `<类型>/<描述>`，例如 `zhangsan/login-feature`、`feature/login`、`fix/parser-crash`。
-
-## 首次准备
-
-本仓库隶属于 GitHub 组织 `oom-alchemists`，成员权限由组织统一管理，加入组织后自动获得各仓库的写权限，无需逐仓库授权。
-
-1. 成员向负责人提供自己的 GitHub 用户名（已注册）或常用邮箱（尚未注册）。
-2. 负责人发出组织邀请并挂入 `developers` Team；成员在邮箱中点击接受链接（7 天内有效）即完成加入。尚未注册 GitHub 的成员，先用邀请邮箱完成注册，再点击接受链接。
-3. 克隆仓库：
-
-```bash
-git clone https://github.com/oom-alchemists/bert-Teams.git
-cd bert-Teams
-```
 
 ## 日常开发流程
 
@@ -81,7 +67,7 @@ gh pr merge
 git push origin --delete zhangsan/login-feature
 ```
 
-## 发布流程（负责人执行）
+## 发布流程
 
 `dev` 上的代码经过验证、达到可发布状态后，发起 `dev` → `main` 的 PR：
 
@@ -90,11 +76,10 @@ gh pr create --base main --head dev --title "release: 合并 dev 至 main"
 gh pr merge
 ```
 
-该 PR 需要负责人审核批准后才能合并，因此 `main` 上始终只保留经过审核的稳定版本。
+该 PR 需要审核批准后才能合并，因此 `main` 上始终只保留经过审核的稳定版本。
 
 ## 常见问题
 
-- **没有收到组织邀请邮件 / 邀请已过期**：邀请有效期为 7 天，过期后联系负责人重发；未收到时先检查垃圾箱。
 - **push 被拒绝（remote rejected / protected branch）**：目标分支是受保护的 `main` 或 `dev`，请改为推送到个人分支并发起 PR。
 - **PR 的目标分支选错了**：在 PR 页面底部的 Edit 处可直接修改目标分支，无需关闭重建。
 - **本地 `dev` 落后远程**：先执行 `git checkout dev && git pull origin dev`，再从中拉出新分支。
