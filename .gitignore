@@ -1,0 +1,91 @@
+# ============================================================
+# 本 .gitignore 依据《Agent.md》「禁止提交的内容」编写，覆盖全部类别
+# ============================================================
+
+# --- 密钥与凭证 ---
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+secrets.*
+secret.*
+credentials.*
+
+# --- 真实配置文件（模板文件 .env.example / config.example.yaml 允许提交） ---
+.env
+.env.*
+!.env.example
+config.local.yaml
+config.local.yml
+config.local.json
+settings.local.py
+
+# --- 本机环境文件 ---
+*.local
+.local/
+
+# --- IDE / 编辑器目录 ---
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*.swn
+
+# --- AI 工具目录与缓存 ---
+.claude/
+.cursor/
+.copilot/
+.aider*
+.mimosa/
+.zcode/
+.continue/
+.claude.json
+
+# --- 测试产物与缓存 ---
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+.coverage.*
+.tox/
+.nox/
+.hypothesis/
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.py[cod]
+
+# --- 虚拟环境 ---
+.venv/
+venv/
+env/
+
+# --- 日志与数据文件 ---
+*.log
+*.db
+*.sqlite
+*.sqlite3
+logs/
+
+# --- 操作系统文件 ---
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# --- 大型二进制 / 媒体文件 ---
+*.model
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+
+# --- Node（若后续引入前端） ---
+node_modules/
