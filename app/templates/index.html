@@ -8,7 +8,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: "Microsoft YaHei", sans-serif; background: #f0f2f5;
          display: flex; justify-content: center; padding: 40px 16px; }
-  .container { width: 100%; max-width: 720px; background: #fff;
+  .container { width: 100%; max-width: 860px; background: #fff;
                border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08);
                padding: 28px; }
   h1 { font-size: 20px; margin-bottom: 4px; }
@@ -21,21 +21,44 @@
              border: 1px solid #d9d9d9; font-size: 14px; resize: vertical;
              margin-bottom: 12px; }
   button { cursor: pointer; border: none; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
   .btn-primary { background: #1677ff; color: #fff; }
-  .btn-primary:hover { background: #4096ff; }
-  .btn-default { background: #fff; }
+  .btn-primary:hover:not(:disabled) { background: #4096ff; }
+  .btn-default { background: #fff; border: 1px solid #d9d9d9; }
+  .btn-default:hover:not(:disabled) { border-color: #1677ff; color: #1677ff; }
+
+  /* ---- 单模型结果卡片 ---- */
   .result { display: none; margin-top: 20px; padding: 16px; border-radius: 8px;
             background: #f6ffed; border: 1px solid #b7eb8f; }
   .result.error { background: #fff2f0; border-color: #ffccc7; }
-  .intent { font-size: 18px; font-weight: bold; color: #237804; }
-  .meta { color: #666; font-size: 13px; margin-top: 6px; }
-  .top3 { margin-top: 10px; }
-  .top3-item { display: flex; align-items: center; gap: 8px; margin-top: 6px;
+  .intent { font-size: 20px; font-weight: bold; color: #237804; }
+  .intent .en { font-size: 13px; font-weight: normal; color: #7cb305;
+                margin-left: 8px; }
+  .metrics { display: flex; flex-wrap: wrap; gap: 32px; margin-top: 14px; }
+  .metric-k { font-size: 12px; color: #888; }
+  .metric-v { font-size: 18px; font-weight: 600; color: #1f1f1f;
+              font-variant-numeric: tabular-nums; }
+  .top3 { margin-top: 16px; }
+  .top3-title { font-size: 12px; color: #888; margin-bottom: 6px; }
+  .top3-item { display: flex; align-items: center; gap: 10px; margin-top: 6px;
                font-size: 13px; }
-  .bar { height: 10px; border-radius: 5px; background: #1677ff;
-         min-width: 2px; }
-  .bar-label { width: 160px; color: #333; }
-  .bar-value { width: 56px; text-align: right; color: #888; }
+  .bar-track { flex: 1; height: 10px; background: #f0f0f0; border-radius: 5px;
+               overflow: hidden; }
+  .bar { height: 100%; border-radius: 5px; background: #1677ff; }
+  .bar-label { width: 150px; color: #333; }
+  .bar-value { width: 56px; text-align: right; color: #666;
+               font-variant-numeric: tabular-nums; }
+
+  /* ---- 多模型对比表 ---- */
+  .compare { display: none; margin-top: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+  th { color: #888; font-weight: normal; background: #fafafa; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.best td { background: #f6ffed; }
+  .tag { display: inline-block; padding: 1px 6px; border-radius: 4px;
+         font-size: 11px; background: #e6f4ff; color: #1677ff; margin-left: 6px; }
+  .muted { color: #aaa; }
 </style>
 </head>
 <body>
@@ -48,25 +71,58 @@
   </div>
   <textarea id="inputText" placeholder="请输入一句话，例如：年假有几天？"></textarea>
   <div class="row">
-    <button class="btn-primary" onclick="doPredict()">开始分类</button>
-    <button class="btn-default" onclick="clearAll()">清空</button>
+    <button class="btn-primary" id="btnPredict" onclick="doPredict()">开始分类</button>
+    <button class="btn-default" id="btnCompare" onclick="doCompare()">对比全部模型</button>
+    <button class="btn-default" id="btnClear" onclick="clearAll()">清空</button>
   </div>
 
   <div class="result" id="resultBox"></div>
+  <div class="compare" id="compareBox"></div>
 </div>
 
 <script>
+// 类别名的中文展示映射。class.txt 只存英文标签名，此处仅服务于页面可读性，
+// 不参与任何推理逻辑；新增类别时需与 data/class.txt 同步维护。
+const LABEL_CN = {
+  policy_attendance: '考勤制度',
+  it_vpn: 'IT 支持',
+  finance_expense: '财务报销',
+  hr_onboarding: '人力资源',
+  admin_logistics: '行政后勤',
+  engineering_eq: '工程设备',
+  legal_contract: '法务合同',
+  sales_marketing: '销售市场',
+  other_chitchat: '其他/闲聊'
+};
+
+const ESC_MAP = {'&': '&amp;', '<': '&lt;', '>': '&gt;',
+                 '"': '&quot;', "'": '&#39;'};
+
+function cn(name) { return LABEL_CN[name] || name; }
+
+// 转义 HTML 特殊字符。错误信息会回显用户提交的模型名
+// （src/predict.py 的 ValueError 文案含模型名），直接拼进 innerHTML
+// 会形成注入点，因此所有来自服务端的文本一律先转义再渲染。
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (ch) { return ESC_MAP[ch]; });
+}
+
+let MODELS = [];
+
 async function loadModels() {
   const sel = document.getElementById('modelSelect');
   try {
     const resp = await fetch('/api/models');
     const data = await resp.json();
+    MODELS = data.models || [];
     sel.innerHTML = '';
-    if (!data.models || data.models.length === 0) {
+    if (MODELS.length === 0) {
       sel.innerHTML = '<option value="">暂无可用的模型，请先完成训练</option>';
+      document.getElementById('btnPredict').disabled = true;
+      document.getElementById('btnCompare').disabled = true;
       return;
     }
-    for (const m of data.models) {
+    for (const m of MODELS) {
       const opt = document.createElement('option');
       opt.value = m.name;
       opt.textContent = m.desc + '（' + m.name + '）';
@@ -77,51 +133,140 @@ async function loadModels() {
   }
 }
 
+// 调用 /api/predict 并返回统一结构；失败时抛出带可读原因的异常。
+async function predictOne(text, model) {
+  const resp = await fetch('/api/predict', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text, model})
+  });
+  const data = await resp.json();
+  if (!data.ok) throw new Error(data.error || '预测失败');
+  return data;
+}
+
+function fmtConf(c) { return c != null ? (c * 100).toFixed(1) + '%' : '—'; }
+
+function metric(k, v) {
+  return '<div><div class="metric-k">' + k + '</div>' +
+         '<div class="metric-v">' + v + '</div></div>';
+}
+
+function renderResult(data) {
+  let html = '<div class="intent">' + esc(cn(data.intent)) +
+             '<span class="en">' + esc(data.intent) + '</span></div>';
+  html += '<div class="metrics">' +
+          metric('响应时间', data.latency_ms.toFixed(1) + ' ms') +
+          metric('置信度', fmtConf(data.confidence)) +
+          metric('模型', esc(data.model)) +
+          '</div>';
+  if (data.top3 && data.top3.length) {
+    html += '<div class="top3"><div class="top3-title">Top3 候选</div>';
+    for (const [name, prob] of data.top3) {
+      const pct = prob * 100;
+      html += '<div class="top3-item">' +
+              '<span class="bar-label">' + esc(cn(name)) + '</span>' +
+              '<div class="bar-track"><div class="bar" style="width:' +
+              pct.toFixed(1) + '%"></div></div>' +
+              '<span class="bar-value">' + pct.toFixed(1) + '%</span>' +
+              '</div>';
+    }
+    html += '</div>';
+  } else {
+    html += '<div class="top3"><div class="top3-title muted">' +
+            '该模型不输出 Top3 概率分布</div></div>';
+  }
+  return html;
+}
+
+function renderCompare(rows) {
+  let fastest = null;
+  for (const r of rows) {
+    if (r.ok && (fastest === null || r.latency_ms < fastest)) fastest = r.latency_ms;
+  }
+  let html = '<table><thead><tr><th>模型</th><th>意图</th>' +
+             '<th class="num">置信度</th><th class="num">响应时间</th>' +
+             '</tr></thead><tbody>';
+  for (const r of rows) {
+    if (!r.ok) {
+      html += '<tr><td>' + esc(r.desc) + '</td><td colspan="3" class="muted">' +
+              esc(r.error) + '</td></tr>';
+      continue;
+    }
+    const best = r.latency_ms === fastest;
+    html += '<tr' + (best ? ' class="best"' : '') + '>' +
+            '<td>' + esc(r.desc) + (best ? '<span class="tag">最快</span>' : '') + '</td>' +
+            '<td>' + esc(cn(r.intent)) + '</td>' +
+            '<td class="num">' + fmtConf(r.confidence) + '</td>' +
+            '<td class="num">' + r.latency_ms.toFixed(1) + ' ms</td>' +
+            '</tr>';
+  }
+  return html + '</tbody></table>';
+}
+
+function setBusy(busy) {
+  for (const id of ['btnPredict', 'btnCompare', 'btnClear']) {
+    document.getElementById(id).disabled = busy;
+  }
+}
+
 async function doPredict() {
   const text = document.getElementById('inputText').value.trim();
   const model = document.getElementById('modelSelect').value;
   const box = document.getElementById('resultBox');
+  document.getElementById('compareBox').style.display = 'none';
   if (!text) { alert('请输入文本'); return; }
   if (!model) { alert('暂无可用模型'); return; }
+
   box.style.display = 'block';
   box.className = 'result';
   box.innerHTML = '分类中...';
-
+  setBusy(true);
   try {
-    const resp = await fetch('/api/predict', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({text, model})
-    });
-    const data = await resp.json();
-    if (!data.ok) throw new Error(data.error || '预测失败');
-
-    let html = '<div class="intent">意图：' + data.intent + '</div>';
-    html += '<div class="meta">模型：' + data.model +
-            '　响应时间：' + data.latency_ms.toFixed(1) + ' ms' +
-            (data.confidence != null ?
-             '　置信度：' + (data.confidence * 100).toFixed(1) + '%' : '') +
-            '</div>';
-    if (data.top3) {
-      html += '<div class="top3">';
-      for (const [name, prob] of data.top3) {
-        const pct = (prob * 100);
-        html += '<div class="top3-item"><span class="bar-label">' + name +
-                '</span><div class="bar" style="width:' + Math.max(pct * 3, 2) +
-                'px"></div><span class="bar-value">' + pct.toFixed(1) + '%</span></div>';
-      }
-      html += '</div>';
-    }
-    box.innerHTML = html;
+    box.innerHTML = renderResult(await predictOne(text, model));
   } catch (e) {
     box.className = 'result error';
-    box.innerHTML = '请求失败：' + e.message;
+    box.innerHTML = '请求失败：' + esc(e.message);
+  } finally {
+    setBusy(false);
+  }
+}
+
+// 逐个模型串行请求：串行才能得到可横向比较的延迟，且避免多模型同时加载
+// 造成的内存峰值。对比结果用于答辩主线的「四条路线横向对比表」。
+async function doCompare() {
+  const text = document.getElementById('inputText').value.trim();
+  const box = document.getElementById('compareBox');
+  document.getElementById('resultBox').style.display = 'none';
+  if (!text) { alert('请输入文本'); return; }
+  if (MODELS.length === 0) { alert('暂无可用模型'); return; }
+
+  box.style.display = 'block';
+  setBusy(true);
+  const rows = [];
+  try {
+    for (let i = 0; i < MODELS.length; i++) {
+      const m = MODELS[i];
+      box.innerHTML = '<div class="muted">对比中… (' + (i + 1) + '/' +
+                      MODELS.length + ') ' + esc(m.desc) + '</div>';
+      try {
+        const data = await predictOne(text, m.name);
+        rows.push({desc: m.desc, ok: true, intent: data.intent,
+                   confidence: data.confidence, latency_ms: data.latency_ms});
+      } catch (e) {
+        rows.push({desc: m.desc, ok: false, error: e.message});
+      }
+    }
+    box.innerHTML = renderCompare(rows);
+  } finally {
+    setBusy(false);
   }
 }
 
 function clearAll() {
   document.getElementById('inputText').value = '';
   document.getElementById('resultBox').style.display = 'none';
+  document.getElementById('compareBox').style.display = 'none';
 }
 
 loadModels();
