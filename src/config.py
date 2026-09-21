@@ -22,7 +22,7 @@ EVAL_FILE = DATA_DIR / "eval" / "test_queries.jsonl"
 
 # 训练默认超参数（单位与取值范围见各训练脚本参数说明）
 MAX_LEN = 48        # 输入截断长度，单位 token；数据集文本较短，48 足够覆盖
-BATCH_SIZE = 64     # 批次大小；8GB 显存在 max_len=48 下可承受
+BATCH_SIZE = 32     # 批次大小；8GB 显存在 max_len=48 下可承受
 EPOCHS = 3          # 训练轮数
 LR = 2e-5           # AdamW 初始学习率
 SEED = 42           # 全局随机种子，保证实验可复现
