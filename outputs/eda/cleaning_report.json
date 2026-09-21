@@ -1,0 +1,21 @@
+{
+  "train": {
+    "before": 202500,
+    "after": 199968,
+    "conflict_texts_removed": 1266,
+    "rows_removed": 2532
+  },
+  "dev": {
+    "dropped_conflict": 147,
+    "dropped_dup": 2,
+    "before": 10000,
+    "after": 9851
+  },
+  "test": {
+    "dropped_conflict": 135,
+    "dropped_dup": 4,
+    "before": 11099,
+    "after": 10960
+  },
+  "residual_conflict_texts": 0
+}
