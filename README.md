@@ -115,13 +115,19 @@ python -m app.flask_app --port 5000     # 浏览器打开 http://localhost:5000
 
 ## 六、数据说明
 
-- `data/train.txt` 202,500 条 / `test.txt`、`dev.txt` 各 11,250 条，格式 `文本\t标签ID`
+- `data/train.txt` / `data/dev.txt` / `data/test.txt`：**已清洗的正式数据**，格式 `文本\t标签ID`
+  （train 201,234 条 / dev 9,998 条 / test 11,095 条，9 类）
+- `data/raw/{train,dev,test}.txt`：**原始未清洗语料**（202,500 / 10,000 / 11,099 条），归档用于对比与复现
+- `data/synthetic_label_rules.json` + `scripts/clean_synthetic.py`：清洗规则表与清洗脚本
+  （去重 1,266 条重复行；按 knowledge_base 重新分类 7 个双标签主题；报告见 `data/clean_reports/`）
 - `data/class.txt` 9 个意图标签（8 业务 + 其他闲聊），行号即标签 ID
 - `data/stopwords.txt` 749 个停用词（TF-IDF 用）
 - `data/eval/test_queries.jsonl` 人工真实问句评估集（初始 18 条，评估组扩充至 118 条，覆盖全部 9 类，含 100 条全员新增问句）
 
-**数据质量提示**：训练/测试集由模板合成，同源同分布，BERT 分数会虚高。
-真实水平以人工评估集为准——这是答辩的重要亮点而非问题。
+**数据质量提示**：训练/测试集由模板合成，同源同分布，且原始语料存在 7 个主题被两个类别各标一半的
+矛盾标注，因此未清洗测试集上的 98.4% 属于虚高。清洗后同一模型的分数为 98.40%，其中仍有 75.8% 的错误
+来自团队内的口径分歧；真实水平以人工评估集（91.53%）为准——这是答辩的重要亮点而非问题。
+完整分析见 [docs/eval_report.md](./docs/eval_report.md) 与 [data/eval/badcase_notes.md](./data/eval/badcase_notes.md)。
 
 ## 六、目录结构
 
