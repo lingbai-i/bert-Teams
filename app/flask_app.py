@@ -9,9 +9,11 @@
     python -m app.flask_app --port 5000
 """
 from flask import Flask, jsonify, render_template, request
+from typing import Dict, List
 
 import argparse
 import logging
+import time
 
 from src.predict import get_available_models, get_predictor
 
@@ -47,6 +49,30 @@ def predict():
     return jsonify(result)
 
 
+def warm_up(models: List[Dict[str, str]]) -> None:
+    """启动时预加载全部可用模型，把权重加载开销前移到服务启动阶段。
+
+    现象：首次调用 /api/predict 时界面长时间无响应（CPU 上加载 BERT 约需数十秒），
+          而接口返回的 latency_ms 仅数十毫秒，两者相差数百倍。
+    原因：get_predictor 采用进程内惰性缓存，权重直到首个请求所在的线程才加载；
+          而 src/predict.py 的 latency_ms 只统计 predict() 内部耗时，不含加载。
+    后果：演示时首次点击「开始分类」出现无响应空窗，且响应时间指标失真。
+          预热后加载耗时只体现在启动日志，请求侧保留纯推理耗时。
+
+    参数:
+        models: get_available_models() 返回的模型列表，每项含 name 与 desc 字段。
+
+    异常:
+        任一模型加载失败即向上抛出，让服务在启动阶段就暴露问题，
+        避免带着不可用模型启动，直到演示时才在请求侧失败。
+    """
+    for item in models:
+        name = item["name"]
+        t0 = time.perf_counter()
+        get_predictor(name, DEVICE)
+        logger.info(f"模型 {name} 预热完成，耗时 {time.perf_counter() - t0:.1f} 秒")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="意图分类 Flask 服务")
     ap.add_argument("--host", default="0.0.0.0")
@@ -55,5 +81,7 @@ if __name__ == "__main__":
                     help="BERT 系列推理设备，部署默认 CPU")
     args = ap.parse_args()
     DEVICE = args.device
-    logger.info(f"可用模型: {[m['name'] for m in get_available_models()]}")
+    available = get_available_models()
+    logger.info(f"可用模型: {[m['name'] for m in available]}")
+    warm_up(available)
     app.run(host=args.host, port=args.port)
