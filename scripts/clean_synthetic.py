@@ -8,9 +8,10 @@
     评估阶段测得合成集 178 条 bad case 中 75.8% 落在这些双标签主题上，因此先清洗数据再谈指标。
 
 分类依据：
-    data/synthetic_label_rules.json 的规则表。规则本身依据 data/knowledge_base 各部门文档
-    （每个部门目录一一对应 class.txt 的一个类别）与 data/class.txt 裁定，每条规则带 evidence
-    字段指向知识库原文，便于复核与回滚。本脚本不自行发明标签，只执行规则表。
+    data/synthetic_label_rules.json 的规则表。每条规则带 basis 字段说明裁定来源
+    （knowledge_base = 按 data/knowledge_base 对应部门文档归属；convention_decision = 按团队口径决策，
+    用于那些知识库与已训练权重冲突的主题），另带 knowledge_base_note 记录知识库原文对照，
+    便于复核与回滚。本脚本不自行发明标签，只执行规则表。
 
 匹配与去重口径：
     - 规则按最长短语优先：同时命中“劳动仲裁”（-> hr_onboarding）与更短的规则时以更长的为准，
@@ -185,13 +186,14 @@ def format_report(stats: Dict[str, object], rules: List[Dict[str, str]], src: Pa
     lines.append("")
     lines.append("## 各规则命中情况")
     lines.append("")
-    lines.append("| 规则短语 | 裁定标签 | 类型 | 命中行数 | 依据 |")
-    lines.append("|----------|----------|------|----------|------|")
+    lines.append("| 规则短语 | 裁定标签 | 类型 | 命中行数 | 裁定依据 | knowledge_base 对照 |")
+    lines.append("|----------|----------|------|----------|----------|---------------------|")
     for rule in sorted(rules, key=lambda r: -len(r["phrase"])):
         hits = stats["per_rule"].get(rule["phrase"], 0)
         if hits == 0:
             continue
-        lines.append(f"| {rule['phrase']} | {rule['label']} | {rule['kind']} | {hits} | {rule['evidence']} |")
+        lines.append(f"| {rule['phrase']} | {rule['label']} | {rule['kind']} | {hits} "
+                     f"| {rule['basis']} | {rule['knowledge_base_note']} |")
     lines.append("")
     lines.append("## 类别分布（清洗前 -> 清洗后）")
     lines.append("")
