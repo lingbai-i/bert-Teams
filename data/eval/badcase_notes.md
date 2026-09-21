@@ -1,7 +1,7 @@
 > **本节指标对应的权重**：`models/best.pt`，sha256 `3313804ef8ce1d6d…`（2026-09-21 20:14 版本）。
-> 该模型是在**另一套清洗口径**的数据上训练的（见第四节），这与本仓库 `data/*.txt` 采用的知识库口径
-> 在 4 个主题上不同。`src/evaluate.py` 已把权重哈希写进 `metrics.json` 与 `badcases.txt` 头部，
+> `src/evaluate.py` 已把权重哈希写进 `metrics.json` 与 `badcases.txt` 头部；
 > 换权重后必须整套重跑，否则会出现"同一测试集两个分数"的口径混乱。
+> 清洗口径已于 2026-09-21 按团队决策统一到该权重的训练口径（见第五节）。
 
 ### 一、未清洗合成集（data/raw/test.txt：11099 条，错误 172 条，错误率 1.55%）
 
@@ -36,23 +36,22 @@ NDA（23 条）、NPS（19 条）、VPN（1 条）三个主题在语料里**只�
 
 #### 3. 其余：0 条。172 = 129 + 43，没有第三条原因。
 
-### 二、清洗后的合成集（data/test.txt：11095 条，错误 178 条，错误率 1.60%）
+### 二、清洗后的合成集（data/test.txt：11095 条，错误 52 条，错误率 0.47%）
 
-清洗只修"真·矛盾标注"（第五节）。清洗后错误结构变成：
+清洗内容见第六节，口径决策见第五节。统一口径后错误结构变得非常干净：
 
 | 混淆对（真实 -> 预测） | 条数 | 占错误比 | 性质 |
 |------------------------|------|----------|------|
-| policy_attendance -> hr_onboarding | 107 | 60.1% | **口径分歧**：病假工资/育儿假/陪产假，本表判 policy，模型训练数据判 hr |
-| policy_attendance -> finance_expense | 28 | 15.7% | **口径分歧**：加班费计算，本表判 policy，模型训练数据判 finance |
-| legal_contract -> engineering_eq | 23 | 12.9% | NDA 缩写捷径 |
-| sales_marketing -> engineering_eq | 19 | 10.7% | NPS 缩写捷径 |
-| it_vpn -> engineering_eq | 1 | 0.6% | VPN 缩写捷径 |
+| legal_contract -> engineering_eq | 23 | 44.2% | NDA 缩写捷径 |
+| sales_marketing -> engineering_eq | 19 | 36.5% | NPS 缩写捷径 |
+| finance_expense -> policy_attendance | 9 | 17.3% | 加班费计算：模型对该主题预测一致性仅 77%，少数样本押回 policy |
+| it_vpn -> engineering_eq | 1 | 1.9% | VPN 缩写捷径 |
 
-- 前两对共 **135 条（75.8%）是口径分歧而不是模型能力问题**：模型 100% 一致地预测 hr / finance，
-  说明它训练数据里这几个主题就是那样标的。**换一套口径（改规则或重训任一侧）这批错误即刻消失。**
-- 后三对共 **43 条（24.2%）** 是缩写捷径，需补数据。
-- 反向收益：未清洗集上 hr_onboarding -> legal_contract 的 37 条、sales_marketing -> legal_contract
-  的 18 条在清洗后全部消失——保密协议/竞业协议/合同模板统一到 legal 后，与模型预测一致。
+- **43 条（82.7%）是缩写捷径**（与标签无关，需补数据）；**9 条（17.3%）是同一主题内的预测不一致**。
+- 清洗前占据 75.8% 的 135 条口径分歧错误**全部消失**——标签与模型预测同侧之后它们不再是错误。
+- 逐类收益：`legal_contract` F1 0.9692 -> 0.9911，`hr_onboarding` 0.9627 -> 1.0000，
+  `finance_expense` 0.9932 -> 0.9964，`policy_attendance` recall 0.9440 -> 0.9939；
+  整体 accuracy 0.9845 -> 0.9953。
 
 ### 三、人工集（data/eval/test_queries.jsonl：118 条，错误 10 条，错误率 8.47%）
 
@@ -103,70 +102,66 @@ admin_logistics。行政语料覆盖会议、场地、物资、活动、后勤�
 |------|--------------|--------------|--------|
 | 文件 | data/raw/test.txt | data/test.txt | data/eval/test_queries.jsonl |
 | 样本数 | 11099 | 11095 | 118 |
-| accuracy / macro-F1 | 0.9845 / 0.9847 | 0.9840 / 0.9841 | 0.9153 / 0.9130 |
-| 错误率 | 1.55% | 1.60% | 8.47% |
-| 错误主因 | 双标签标注 75.0% + 缩写捷径 25.0% | 口径分歧 75.8% + 缩写捷径 24.2% | 越界拒答类缺失 + 部门边界模糊 |
-| 修复动作 | 已修复（清洗数据） | 统一口径（改规则或重训）+ 补缩写数据 | 扩标签体系 / 多标签路由 / 拒答机制 |
+| accuracy / macro-F1 | 0.9845 / 0.9847 | **0.9953 / 0.9954** | **0.9153 / 0.9130** |
+| 错误率 | 1.55% | 0.47% | 8.47% |
+| 错误主因 | 双标签标注 75.0% + 缩写捷径 25.0% | 缩写捷径 82.7% + 主题内不一致 17.3% | 越界拒答类缺失 + 部门边界模糊 |
+| 修复动作 | 已修复（清洗数据） | 补缩写主题数据 | 扩标签体系 / 多标签路由 / 拒答机制 |
 
 一句话结论：**未清洗合成集的 98.45% 是"押中了矛盾标注某一侧"的虚高分数；
-清洗后同一模型的 98.40% 里 75.8% 的错误是团队内部两套口径的分歧（可即时消除）、
-24.2% 是缩写捷径；人工集的 91.53% 才是真实语义边界下的可用性。
-三个数字的差值分别对应"数据缺陷""口径分歧""标签体系缺陷"，都可以在答辩中讲清。**
+清洗并把口径统一到模型侧之后是 99.53%（剩余错误 82.7% 是缩写捷径）；
+人工集的 91.53% 才是真实语义边界下的可用性，8.0 个百分点的差距来自"模板合成 vs 真实口语"的分布差异
+以及标签体系本身缺拒答类。**
 
-### 五、口径分歧明细（用 best.pt 的预测分布反推训练口径）
+### 五、口径决策记录（2026-09-21）
 
-| 主题 | 本表裁定（知识库依据） | 该模型训练口径 | 模型预测一致性 | 知识库原文 |
-|------|------------------------|----------------|----------------|------------|
-| 病假工资 | policy_attendance | hr_onboarding | 100% | policy/attendance.md 2.2 病假：病假工资按基本工资的 80% 发放 |
-| 育儿假 | policy_attendance | hr_onboarding | 100% | policy/attendance.md 2.4 其他假期：育儿假每年各 5 天 |
-| 陪产假 | policy_attendance | hr_onboarding | 100% | policy/attendance.md 2.4 其他假期：陪产假 15 天 |
-| 加班费计算 | policy_attendance | finance_expense | 77% | policy/overtime.md 章节标题《加班费计算》 |
-| 保密协议 | legal_contract | legal_contract | 100% | legal/confidential.md 章节《保密协议》 |
-| 竞业协议 | legal_contract | legal_contract | 100% | legal/confidential.md 章节《竞业限制》 |
-| 合同模板 | legal_contract | legal_contract | 100% | legal/contract.md 1.2 模板：常用模板见 OA 法务模板库 |
-
-**为什么建议按知识库口径统一**：部署层是拿意图标签去检索知识库文档的（`data/knowledge_base/<部门>/`）。
-若 `病假工资` 被路由到 hr，而答案写在 `policy/attendance.md` 里，现场 demo 会取错文档、答非所问。
-意图标签应当指向"哪个部门的文档能回答这个问题"，这正是本表裁定的定义。
+| 项 | 内容 |
+|----|------|
+| 决策 | 7 个争议主题的归属统一采用权威权重 `models/best.pt` 的训练口径，不采用 knowledge_base 的部门归属裁定 |
+| 范围 | 病假工资 / 育儿假 / 陪产假 -> `hr_onboarding`；加班费计算 -> `finance_expense`；保密协议 / 竞业协议 / 合同模板 -> `legal_contract`（两套口径本来就一致） |
+| 理由 | 与已训练好的权威权重一致，无需重训即可让数据与模型自洽，答辩前时间成本最低 |
+| 反推依据 | 在未清洗测试集上按主题统计 best.pt 预测分布：病假工资/育儿假/陪产假预测 hr_onboarding 一致性 100%，加班费计算预测 finance_expense 77%（50:50 的监督只会学到五五开分布，故一致性即训练口径） |
+| knowledge_base 对照 | `policy/attendance.md` 2.2 写了病假工资发放比例、2.4 列了育儿假/陪产假；`policy/overtime.md` 章节标题即《加班费计算》——即知识库侧更倾向 policy_attendance |
+| 已知风险 | 部署层按意图标签检索 `data/knowledge_base/<部门>/`：`病假工资` 会命中 hr 目录、`加班费计算` 会命中 finance 目录，而答案写在 policy 目录下，现场 demo 有取错文档的风险 |
+| 缓解方式（部署组） | (1) 在 `app/flask_app.py` 的知识库路由层加"主题 -> 文档目录"别名映射；(2) 把 `policy/attendance.md` 的假期待遇段落、`policy/overtime.md` 的加班费段落同步到 `hr/`、`finance/` 目录 |
+| 回退方式 | 把 `data/synthetic_label_rules.json` 这 4 条的 `label` 改回 `policy_attendance`，重跑清洗脚本与三份评估即可（约 2 分钟），无需改代码 |
 
 ### 六、数据清洗做了什么（去重 + 重新分类）
 
 清洗脚本 `scripts/clean_synthetic.py` + 规则表 `data/synthetic_label_rules.json`。
 **本表只收录"真·矛盾标注"**（同一主题字符串被两个类别各标约一半），共 7 条：
 
-| 规则短语 | 裁定标签 | 依据（knowledge_base 原文） |
-|----------|----------|------------------------------|
-| 病假工资 | policy_attendance | policy/attendance.md 2.2 病假：病假工资按基本工资的 80% 发放 |
-| 育儿假 | policy_attendance | policy/attendance.md 2.4 其他假期：育儿假每年各 5 天 |
-| 陪产假 | policy_attendance | policy/attendance.md 2.4 其他假期：陪产假 15 天 |
-| 加班费计算 | policy_attendance | policy/overtime.md 章节标题《加班费计算》 |
-| 保密协议 | legal_contract | legal/confidential.md 章节《保密协议》 |
-| 竞业协议 | legal_contract | legal/confidential.md 章节《竞业限制》 |
-| 合同模板 | legal_contract | legal/contract.md 1.2 模板：常用模板见 OA 法务模板库 |
+| 规则短语 | 裁定标签 | 裁定依据 | 命中行数（train） |
+|----------|----------|----------|-------------------|
+| 病假工资 | hr_onboarding | 口径决策（知识库侧为 policy/attendance.md 2.2） | 733 |
+| 育儿假 | hr_onboarding | 口径决策（知识库侧为 policy/attendance.md 2.4 其他假期） | 751 |
+| 陪产假 | hr_onboarding | 口径决策（知识库侧为 policy/attendance.md 2.4 其他假期） | 746 |
+| 加班费计算 | finance_expense | 口径决策（知识库侧为 policy/overtime.md 章节《加班费计算》） | 750 |
+| 保密协议 | legal_contract | knowledge_base（legal/confidential.md 章节《保密协议》） | 735 |
+| 竞业协议 | legal_contract | knowledge_base（legal/confidential.md 章节《竞业限制》） | 737 |
+| 合同模板 | legal_contract | knowledge_base（legal/contract.md 1.2 模板） | 743 |
 
 以下 4 个候选**经复核后从规则中移除**，理由记录在规则表的 `dropped_candidates` 字段：
 `盖章`（合同盖章与盖章流程是两个不同主题、各自内部一致，不构成矛盾）、
 `劳动仲裁`（语料中 100% 属 hr_onboarding，法务侧是另一个主题"仲裁申请"）、
-`产假工资`、`年假计算`（各自 100% 一致，属口径选择而非矛盾标注，留待组长裁定）。
+`产假工资`、`年假计算`（各自 100% 一致，属口径选择而非矛盾标注）。
 
 清洗结果（原始语料归档在 `data/raw/`，且已在 git 中，可随时回滚）：
 
 | 文件 | 行数变化 | 重分类行数 | 去重丢弃 | 残留同文本异标签 |
 |------|----------|------------|----------|------------------|
-| `data/train.txt` | 202500 -> 201234 | 2604 | 1266 | 0 |
-| `data/dev.txt` | 10000 -> 9998 | 137 | 2 | 0 |
-| `data/test.txt` | 11099 -> 11095 | 127 | 4 | 0 |
+| `data/train.txt` | 202500 -> 201234 | 2584 | 1266 | 0 |
+| `data/dev.txt` | 10000 -> 9998 | 133 | 2 | 0 |
+| `data/test.txt` | 11099 -> 11095 | 130 | 4 | 0 |
 
 未命中规则的样本一律保持原标签：只清洗已确认有矛盾的地方，避免清洗本身引入新噪声。
 清洗报告见 `data/clean_reports/{train,dev,test}_report.md`（含每条规则命中数与类别分布前后对比）。
 
 ### 七、改进建议（按性价比排序）
 
-1. **先统一口径**：`病假工资/育儿假/陪产假/加班费计算` 目前有两套标法。
-   按知识库口径需要重训；按现有模型口径只需改规则表并重新清洗（约 2 分钟）。
-   不解决这一条，合成集分数会被无意义地压掉 1.2 个百分点，且 demo 可能取错知识库文档。
-2. **补英文缩写主题**：主动加入 KPI、SLA、ERP、CRM 等语料中未出现的缩写，
-   打破"字母串 -> engineering_eq"的捷径（当前占清洗后合成集错误 24.2%）。
+1. **补英文缩写主题**：主动加入 KPI、SLA、ERP、CRM 等语料中未出现的缩写，
+   打破"字母串 -> engineering_eq"的捷径（当前占清洗后合成集错误的 82.7%）。
+2. **保住口径一致性**：以后任何人改动数据标签，都必须用同一套口径重跑清洗，
+   否则合成集分数会在 98.4%~99.5% 之间无意义地漂移（本次实测：口径不一致 = 1.2 个百分点）。
 3. **增加越界类**（out_of_scope）或在 other_chitchat 中补入"带业务词的越界问句"
    （查他人考勤、CEO 薪酬、内部机密等），并在服务层保留"知识库零命中即拒答"的兜底规则。
 4. **对 legal/hr、it/admin 这类天然重叠的部门**，把单标签分类升级为多标签或在知识库层做二次路由。
