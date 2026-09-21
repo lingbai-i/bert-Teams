@@ -13,7 +13,6 @@ import random
 import torch
 
 
-
 def load_labels(class_file: Path) -> List[str]:
     """读取标签体系。
 
