@@ -23,24 +23,20 @@ CPU 推理提速有限；其价值在于验证网络中存在大量冗余参数�
     python -m src.prune --ckpt checkpoints/intent_bert/best.pt --amount 0.3
 """
 from pathlib import Path
-from sklearn.metrics import (accuracy_score, classification_report, f1_score,
-                             precision_score, recall_score)
 from torch.nn.utils import prune
 from transformers import AutoTokenizer
-from typing import Any, Dict, List
 
 import argparse
 import json
 import logging
-import os
-import tempfile
-import time
 
 import torch
 
+from src.compress_bench import (bench_latency_bert, compute_metrics,
+                                measure_size_mb)
 from src.config import CLASS_FILE, CKPT_DIR, MAX_LEN, MODEL_DIR, TEST_FILE
 from src.data import load_labels
-from src.evaluate import load_any, predict_all
+from src.evaluate import load_any
 from src.model import load_classifier
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
@@ -71,122 +67,6 @@ def query_sparsity(model) -> float:
     if total == 0:
         raise ZeroDivisionError("未找到任何 query 权重，模型结构异常")
     return zeros / total
-
-
-def measure_size_mb(model) -> float:
-    """测量模型序列化后的真实体积。
-
-    参数:
-        model: 待测量模型。
-
-    返回:
-        体积，单位 MB。
-
-    说明:
-        做法是把 state_dict 写进系统临时文件、取字节数、再删除，
-        因此不污染任何输出目录。
-
-        不用 src.model.state_dict_size_mb 的原因：该函数逐张量求和，
-        对量化模型会漏掉 packed params。本模块虽不做量化，
-        但为了让三件套的体积口径完全一致（对比表要求），统一用同一算法。
-
-        剪枝后调用本函数会得到与剪枝前相同的数值——这不是 bug，
-        而是非结构化剪枝的固有性质：张量形状未变，元素个数与字节数都不变。
-
-        副作用：会经历一次完整的磁盘序列化，BERT 规模上耗时数秒。
-    """
-    handle, temp_name = tempfile.mkstemp(suffix=".pt")
-    # Windows 上文件被占用时 torch.save 无法写入，必须先关掉 mkstemp 返回的句柄
-    os.close(handle)
-    temp_path = Path(temp_name)
-    try:
-        torch.save(model.state_dict(), temp_path)
-        return temp_path.stat().st_size / 1024 / 1024
-    finally:
-        # 放在 finally 里：即使上面抛异常也要删掉临时文件
-        temp_path.unlink(missing_ok=True)
-
-
-def bench_latency(model, tokenizer, device: str, n: int = 100) -> float:
-    """测量单条文本的平均推理延迟。
-
-    参数:
-        model: 待测模型。
-        tokenizer: 分词器。
-        device: 推理设备。三件套统一传 "cpu" 以保证可比性。
-        n: 测量次数，取均值，默认 100。
-
-    返回:
-        平均延迟，单位毫秒。
-
-    说明:
-        计时对象是纯前向传播：分词与设备搬运在计时循环之外只做一次，
-        循环内只调用 model(**enc)。因此该数字不含分词与 argmax 的开销，
-        比真实请求的端到端耗时略低。三件套使用同一实现，口径一致，可横向比较。
-
-        测量前先执行 10 次预热，排除首次调用时算子选择与内存分配的开销。
-        延迟受机器负载影响极大（实测同模型波动可达 3.4 倍），
-        只有同一次会话内相邻测出的相对关系才可信。
-    """
-    enc = tokenizer("今天下午的会议改到几点了", return_tensors="pt",
-                    truncation=True, max_length=MAX_LEN)
-    enc = {k: v.to(device) for k, v in enc.items()}
-    model.eval()
-    with torch.no_grad():
-        for _ in range(10):  # 预热，排除首次调用的初始化开销
-            model(**enc)
-        t0 = time.perf_counter()
-        for _ in range(n):
-            model(**enc)
-    return (time.perf_counter() - t0) / n * 1000
-
-
-def compute_metrics(model, tokenizer, texts: List[str], gold_labels: List[int],
-                    label_names: List[str],
-                    device: str) -> Dict[str, Any]:
-    """计算准确率与宏平均 precision/recall/F1，并生成逐类报告。
-
-    参数:
-        model: 待评估模型。
-        tokenizer: 分词器。
-        texts: 文本列表。
-        gold_labels: 真实标签 ID 列表，与 texts 等长。
-        label_names: 标签名列表，下标即标签 ID。
-        device: 推理设备。
-
-    返回:
-        含以下键的字典：
-        - sample_count: 样本条数
-        - accuracy: 准确率
-        - macro_precision / macro_recall / macro_f1: 宏平均三指标
-        - report: 每类的 precision/recall/F1 文本报告
-
-    说明:
-        批量前向复用 src.evaluate.predict_all，本文件不重复实现推理循环。
-
-        计算指标时显式传入 labels=range(类别数)，把标签空间固定为全部类别，
-        否则某个类别缺席时 sklearn 会抛
-        「Number of classes does not match size of target_names」。
-        显式传 labels 后，缺席类别会以 support=0 的形式出现在报告里。
-    """
-    predictions = predict_all(model, tokenizer, texts, device)
-    label_ids = list(range(len(label_names)))
-    return {
-        "sample_count": len(gold_labels),
-        "accuracy": float(accuracy_score(gold_labels, predictions)),
-        "macro_precision": float(precision_score(
-            gold_labels, predictions, labels=label_ids, average="macro",
-            zero_division=0)),
-        "macro_recall": float(recall_score(
-            gold_labels, predictions, labels=label_ids, average="macro",
-            zero_division=0)),
-        "macro_f1": float(f1_score(
-            gold_labels, predictions, labels=label_ids, average="macro",
-            zero_division=0)),
-        "report": classification_report(
-            gold_labels, predictions, labels=label_ids,
-            target_names=label_names, digits=4, zero_division=0),
-    }
 
 
 def verify_pruned_artifact(teacher_ckpt: Path, pruned_ckpt: Path,
@@ -241,8 +121,10 @@ def main(args) -> None:
     异常:
         FileNotFoundError: 教师权重不存在时由 load_classifier 抛出。
     """
-    # 评估用 GPU 加速；延迟测量稍后单独搬到 CPU（见下方注释）
+    # 评估用 GPU 加速（实测 11099 条 GPU 约 3.5 秒、CPU 需 188 秒，准确率一致）；
+    # 延迟测量必须在 CPU 上做，故下面测延迟前会单独把模型搬过去
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    latency_device = "cpu"
     label_names = load_labels(CLASS_FILE)
     tokenizer = AutoTokenizer.from_pretrained(str(MODEL_DIR))
     model = load_classifier(MODEL_DIR, Path(args.ckpt), len(label_names), device)
@@ -254,9 +136,16 @@ def main(args) -> None:
                                      label_names, device)
     size_before = measure_size_mb(model)
     sparsity_before = query_sparsity(model)
+    # 剪枝前的延迟必须在剪枝之前测：剪枝是对模型原地修改的，
+    # 一旦执行就再也拿不到剪枝前的权重，无法补测
+    model.to(latency_device)
+    latency_before = bench_latency_bert(model, tokenizer, latency_device)
+    if device != latency_device:
+        model.to(device)
     logger.info(f"剪枝前: acc={metrics_before['accuracy']:.4f} "
                 f"macro_f1={metrics_before['macro_f1']:.4f} "
-                f"体积={size_before:.1f}MB 稀疏度={sparsity_before:.2%}")
+                f"体积={size_before:.1f}MB 稀疏度={sparsity_before:.2%} "
+                f"CPU延迟={latency_before:.1f}ms")
 
     # 对所有 encoder 层的 query 权重做全局 L1 非结构化剪枝
     params = [(layer.attention.self.query, "weight")
@@ -285,9 +174,11 @@ def main(args) -> None:
 
     # 延迟统一在 CPU 上测：量化后的 INT8 算子只有 CPU 实现，
     # 三件套必须在同一设备口径下比较延迟才有意义
-    model.to("cpu")
-    latency_after = bench_latency(model, tokenizer, "cpu")
-    logger.info(f"CPU 延迟={latency_after:.1f}ms")
+    model.to(latency_device)
+    latency_after = bench_latency_bert(model, tokenizer, latency_device)
+    latency_change = (latency_after / latency_before - 1) * 100
+    logger.info(f"剪枝后 CPU 延迟={latency_after:.1f}ms（"
+                f"较剪枝前 {latency_change:+.1f}%）")
 
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -320,6 +211,7 @@ def main(args) -> None:
         "size_unchanged": abs(size_after - size_before) < 1e-6,
         "sparsity_before": sparsity_before,
         "sparsity_after": sparsity_after,
+        "cpu_latency_ms_before": latency_before,
         "cpu_latency_ms_after": latency_after,
         "artifact_bytes": artifact_bytes,
         "report_after": metrics_after["report"],

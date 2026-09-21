@@ -29,29 +29,27 @@ T^2 用于平衡温度升高后软标签梯度尺度被稀释的问题。
     python -m src.distill --subsample 5000 --epochs 1   # 快速验证流程
 """
 from pathlib import Path
-from sklearn.metrics import (accuracy_score, classification_report, f1_score,
-                             precision_score, recall_score)
 from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
-from typing import Any, Dict, List, Tuple
 
 import argparse
 import json
 import logging
-import os
-import tempfile
 import time
 
 import torch
 import torch.nn.functional as F
 
+from src.compress_bench import (bench_latency_bert, bench_latency_bilstm,
+                                compute_metrics, measure_size_mb,
+                                metrics_from_predictions, predict_bilstm_all)
 from src.config import (
     BATCH_SIZE, CKPT_DIR, CLASS_FILE, DEV_FILE, MAX_LEN, MODEL_DIR, SEED,
     TEST_FILE, TRAIN_FILE,
 )
 from src.data import build_dataloader, load_labels, load_txt, subsample
-from src.evaluate import load_any, predict_all
+from src.evaluate import load_any
 from src.model import BiLSTMClassifier, count_parameters, load_classifier
 from src.train import set_seed
 
@@ -83,169 +81,6 @@ def evaluate_bilstm(model, dl: DataLoader, device: str) -> float:
             correct += (logits.argmax(-1).cpu() == batch["label"]).sum().item()
             total += len(batch["label"])
     return correct / max(total, 1)
-
-
-def predict_bilstm_all(model, dl: DataLoader,
-                       device: str) -> Tuple[List[int], List[int]]:
-    """遍历 DataLoader 收集学生模型的预测与真实标签。
-
-    参数:
-        model: 学生模型。
-        dl: 数据加载器。
-        device: 推理设备。
-
-    返回:
-        (预测标签 ID 列表, 真实标签 ID 列表)，两者等长且同序。
-
-    说明:
-        不能复用 src.evaluate.predict_all：那个函数按
-        model(input_ids=..., attention_mask=...).logits 调用，
-        而 BiLSTMClassifier 的 forward 直接返回 logits 张量、没有 logits 属性。
-        因此这里单独实现一份，只取返回值的张量本身。
-    """
-    predictions: List[int] = []
-    golds: List[int] = []
-    model.eval()
-    with torch.no_grad():
-        for batch in dl:
-            logits = model(batch["input_ids"].to(device),
-                           batch["attention_mask"].to(device))
-            predictions.extend(logits.argmax(-1).cpu().tolist())
-            golds.extend(batch["label"].tolist())
-    return predictions, golds
-
-
-def metrics_from_predictions(predictions: List[int], gold_labels: List[int],
-                             label_names: List[str]) -> Dict[str, Any]:
-    """由预测与真实标签计算准确率与宏平均 precision/recall/F1。
-
-    参数:
-        predictions: 预测标签 ID 列表。
-        gold_labels: 真实标签 ID 列表，与 predictions 等长。
-        label_names: 标签名列表，下标即标签 ID。
-
-    返回:
-        含 sample_count、accuracy、macro_precision、macro_recall、macro_f1、
-        report 六个键的字典。
-
-    说明:
-        显式传入 labels=range(类别数)，把标签空间固定为全部类别。
-        若不传，当某个类别在数据中缺席时 sklearn 会抛
-        「Number of classes does not match size of target_names」——
-        data/dev.txt 缺一个类，正是这种情形。
-        显式传 labels 后，缺席类别会以 support=0 的形式出现在报告里。
-    """
-    label_ids = list(range(len(label_names)))
-    return {
-        "sample_count": len(gold_labels),
-        "accuracy": float(accuracy_score(gold_labels, predictions)),
-        "macro_precision": float(precision_score(
-            gold_labels, predictions, labels=label_ids, average="macro",
-            zero_division=0)),
-        "macro_recall": float(recall_score(
-            gold_labels, predictions, labels=label_ids, average="macro",
-            zero_division=0)),
-        "macro_f1": float(f1_score(
-            gold_labels, predictions, labels=label_ids, average="macro",
-            zero_division=0)),
-        "report": classification_report(
-            gold_labels, predictions, labels=label_ids,
-            target_names=label_names, digits=4, zero_division=0),
-    }
-
-
-def measure_size_mb(model) -> float:
-    """测量模型序列化后的真实体积。
-
-    参数:
-        model: 待测量模型（教师或学生均可）。
-
-    返回:
-        体积，单位 MB。
-
-    说明:
-        做法是把 state_dict 写进系统临时文件、取字节数、再删除，
-        因此不污染任何输出目录。
-
-        不用 src.model.state_dict_size_mb 的原因：该函数逐张量求和，
-        对量化模型会漏掉 packed params。本模块虽不做量化，
-        但为了让三件套的体积口径完全一致（对比表要求），统一用同一算法。
-
-        副作用：会经历一次完整的磁盘序列化。
-    """
-    handle, temp_name = tempfile.mkstemp(suffix=".pt")
-    # Windows 上文件被占用时 torch.save 无法写入，必须先关掉 mkstemp 返回的句柄
-    os.close(handle)
-    temp_path = Path(temp_name)
-    try:
-        torch.save(model.state_dict(), temp_path)
-        return temp_path.stat().st_size / 1024 / 1024
-    finally:
-        # 放在 finally 里：即使上面抛异常也要删掉临时文件
-        temp_path.unlink(missing_ok=True)
-
-
-def bench_latency_bert(model, tokenizer, device: str, n: int = 100) -> float:
-    """测量 BERT 系列模型单条文本的平均推理延迟（毫秒）。
-
-    参数:
-        model: BERT 系列模型。
-        tokenizer: 分词器。
-        device: 推理设备。三件套统一传 "cpu" 以保证可比性。
-        n: 测量次数，取均值，默认 100。
-
-    返回:
-        平均延迟，单位毫秒。
-
-    说明:
-        计时对象是纯前向传播：分词与设备搬运在计时循环之外只做一次，
-        因此该数字不含分词与 argmax 的开销，与 quantize/prune 的实现口径一致。
-    """
-    enc = tokenizer("今天下午的会议改到几点了", return_tensors="pt",
-                    truncation=True, max_length=MAX_LEN)
-    enc = {k: v.to(device) for k, v in enc.items()}
-    model.eval()
-    with torch.no_grad():
-        for _ in range(10):  # 预热，排除首次调用的初始化开销
-            model(**enc)
-        t0 = time.perf_counter()
-        for _ in range(n):
-            model(**enc)
-    return (time.perf_counter() - t0) / n * 1000
-
-
-def bench_latency_bilstm(model, tokenizer, device: str,
-                         n: int = 100) -> float:
-    """测量 BiLSTM 学生模型单条文本的平均推理延迟（毫秒）。
-
-    参数:
-        model: 学生模型。
-        tokenizer: 分词器。
-        device: 推理设备。
-        n: 测量次数，取均值，默认 100。
-
-    返回:
-        平均延迟，单位毫秒。
-
-    说明:
-        与 bench_latency_bert 分开实现而不是加一个布尔开关：
-        两类模型的调用签名不同——学生只接受 input_ids 与 attention_mask，
-        不接受 token_type_ids，传 **enc 会直接报参数错误。
-        写成两个函数能让签名差异在代码里直接可见。
-        计时对象同样是纯前向传播，不含分词与 argmax。
-    """
-    enc = tokenizer("今天下午的会议改到几点了", return_tensors="pt",
-                    truncation=True, max_length=MAX_LEN)
-    input_ids = enc["input_ids"].to(device)
-    attention_mask = enc["attention_mask"].to(device)
-    model.eval()
-    with torch.no_grad():
-        for _ in range(10):  # 预热
-            model(input_ids, attention_mask)
-        t0 = time.perf_counter()
-        for _ in range(n):
-            model(input_ids, attention_mask)
-    return (time.perf_counter() - t0) / n * 1000
 
 
 def verify_student_artifact(ckpt_path: Path, vocab_size: int, num_labels: int,
@@ -378,17 +213,19 @@ def main(args) -> None:
             torch.save(student.state_dict(), out_dir / "best.pt")
 
     # ---------- 在测试集上报告教师与学生的完整指标 ----------
-    # 三件套的延迟必须在同一设备上比较（量化后的 INT8 算子只有 CPU 实现），
-    # 因此这里把两个模型都搬到 CPU 后再测体积与延迟
+    # 精度评估用 GPU 加速（若可用）：实测 11099 条 GPU 约 3.5 秒、CPU 需 188 秒，
+    # 而准确率与设备无关（两种设备算出的教师准确率都是 0.9840）。
+    # 延迟测量必须在 CPU 上做——量化后的 INT8 算子只有 CPU 实现，
+    # 三件套必须在同一设备口径下比较才有意义。
     test_texts, test_labels = load_any(Path(args.input), label_names)
     logger.info(f"评估数据: {args.input}（{len(test_texts)} 条，{len(label_names)} 类）")
-    teacher.to("cpu")
-    student.to("cpu")
+    eval_device = "cuda" if torch.cuda.is_available() else "cpu"
+    latency_device = "cpu"
 
     # 评估前必须重新加载 dev 最优权重。
     # 原因：训练循环结束后 student 内存里是「最后一轮」的权重，而交付产物是 dev
     # 准确率最高那一轮保存的 best.pt，两者可能不是同一轮——本次实测 best 出现在
-    # 第 1 轮（dev_acc 0.9831），第 3 轮反而降到 0.9756。若直接用内存中的 student
+    # 第 2 轮（dev_acc 0.9831），第 3 轮反而降到 0.9830。若直接用内存中的 student
     # 出指标，metrics.json 报的就不是交付产物 best.pt 的精度。
     student_ckpt = out_dir / "best.pt"
     if not student_ckpt.exists():
@@ -400,20 +237,25 @@ def main(args) -> None:
     logger.info(f"已重新加载 dev 最优权重（best_dev_acc={best_dev_acc:.4f}）"
                 f"用于最终评估")
 
-    teacher_metrics = metrics_from_predictions(
-        predict_all(teacher, tokenizer, test_texts, "cpu"), test_labels,
-        label_names)
+    # 教师是 BERT 系列，可直接用 compress_bench.compute_metrics 走统一路径
+    teacher_metrics = compute_metrics(teacher, tokenizer, test_texts, test_labels,
+                                      label_names, eval_device)
     test_dl = build_dataloader(test_texts, test_labels, tokenizer, args.bs, MAX_LEN)
     # predict_bilstm_all 返回 (预测列表, 真实标签列表) 元组，这里只取预测列表；
     # 真实标签用 test_labels，避免两个来源混用导致长度不一致
-    student_predictions, _ = predict_bilstm_all(student, test_dl, "cpu")
+    student_predictions, _ = predict_bilstm_all(student, test_dl, eval_device)
     student_metrics = metrics_from_predictions(
         student_predictions, test_labels, label_names)
 
     teacher_metrics["size_mb"] = measure_size_mb(teacher)
     student_metrics["size_mb"] = measure_size_mb(student)
-    teacher_metrics["latency_ms"] = bench_latency_bert(teacher, tokenizer, "cpu")
-    student_metrics["latency_ms"] = bench_latency_bilstm(student, tokenizer, "cpu")
+    # 延迟测量搬到 CPU 上进行，与量化/剪枝保持同一口径
+    teacher.to(latency_device)
+    student.to(latency_device)
+    teacher_metrics["latency_ms"] = bench_latency_bert(teacher, tokenizer,
+                                                       latency_device)
+    student_metrics["latency_ms"] = bench_latency_bilstm(student, tokenizer,
+                                                         latency_device)
 
     logger.info(f"教师: acc={teacher_metrics['accuracy']:.4f} "
                 f"macro_f1={teacher_metrics['macro_f1']:.4f} "
