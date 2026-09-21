@@ -1,0 +1,18 @@
+{"query": "公司上下班时间是几点", "intent": "policy_attendance"}
+{"query": "早上几点打卡", "intent": "policy_attendance"}
+{"query": "年假有多少天", "intent": "policy_attendance"}
+{"query": "调休怎么申请", "intent": "policy_attendance"}
+{"query": "VPN 连不上怎么办", "intent": "it_vpn"}
+{"query": "密码忘了怎么重置", "intent": "it_vpn"}
+{"query": "怎么领新电脑", "intent": "it_vpn"}
+{"query": "打印机没法打印", "intent": "it_vpn"}
+{"query": "出差住宿标准是多少", "intent": "finance_expense"}
+{"query": "发票抬头开什么", "intent": "finance_expense"}
+{"query": "报销多久到账", "intent": "finance_expense"}
+{"query": "工资条怎么看", "intent": "finance_expense"}
+{"query": "入职要带什么材料", "intent": "hr_onboarding"}
+{"query": "公积金缴纳比例", "intent": "hr_onboarding"}
+{"query": "离职证明多久能拿到", "intent": "hr_onboarding"}
+{"query": "年度体检怎么预约", "intent": "hr_onboarding"}
+{"query": "CEO 的工资是多少", "intent": "out_of_scope"}
+{"query": "别人的考勤记录能查吗", "intent": "out_of_scope"}
