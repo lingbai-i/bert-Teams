@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企业意图分类系统</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", sans-serif; background: #f0f2f5;
+         display: flex; justify-content: center; padding: 40px 16px; }
+  .container { width: 100%; max-width: 720px; background: #fff;
+               border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08);
+               padding: 28px; }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  .subtitle { color: #888; font-size: 13px; margin-bottom: 20px; }
+  .row { display: flex; gap: 10px; margin-bottom: 12px; }
+  select, button { padding: 8px 14px; border-radius: 8px; border: 1px solid #d9d9d9;
+                   font-size: 14px; }
+  select { flex: 1; }
+  textarea { width: 100%; height: 90px; padding: 10px; border-radius: 8px;
+             border: 1px solid #d9d9d9; font-size: 14px; resize: vertical;
+             margin-bottom: 12px; }
+  button { cursor: pointer; border: none; }
+  .btn-primary { background: #1677ff; color: #fff; }
+  .btn-primary:hover { background: #4096ff; }
+  .btn-default { background: #fff; }
+  .result { display: none; margin-top: 20px; padding: 16px; border-radius: 8px;
+            background: #f6ffed; border: 1px solid #b7eb8f; }
+  .result.error { background: #fff2f0; border-color: #ffccc7; }
+  .intent { font-size: 18px; font-weight: bold; color: #237804; }
+  .meta { color: #666; font-size: 13px; margin-top: 6px; }
+  .top3 { margin-top: 10px; }
+  .top3-item { display: flex; align-items: center; gap: 8px; margin-top: 6px;
+               font-size: 13px; }
+  .bar { height: 10px; border-radius: 5px; background: #1677ff;
+         min-width: 2px; }
+  .bar-label { width: 160px; color: #333; }
+  .bar-value { width: 56px; text-align: right; color: #888; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>企业意图分类系统</h1>
+  <div class="subtitle">BERT / 随机森林 / fasttext / LLM 多模型对比 · BERT 文本分类课程项目</div>
+
+  <div class="row">
+    <select id="modelSelect"><option value="">正在加载模型列表...</option></select>
+  </div>
+  <textarea id="inputText" placeholder="请输入一句话，例如：年假有几天？"></textarea>
+  <div class="row">
+    <button class="btn-primary" onclick="doPredict()">开始分类</button>
+    <button class="btn-default" onclick="clearAll()">清空</button>
+  </div>
+
+  <div class="result" id="resultBox"></div>
+</div>
+
+<script>
+async function loadModels() {
+  const sel = document.getElementById('modelSelect');
+  try {
+    const resp = await fetch('/api/models');
+    const data = await resp.json();
+    sel.innerHTML = '';
+    if (!data.models || data.models.length === 0) {
+      sel.innerHTML = '<option value="">暂无可用的模型，请先完成训练</option>';
+      return;
+    }
+    for (const m of data.models) {
+      const opt = document.createElement('option');
+      opt.value = m.name;
+      opt.textContent = m.desc + '（' + m.name + '）';
+      sel.appendChild(opt);
+    }
+  } catch (e) {
+    sel.innerHTML = '<option value="">模型列表加载失败</option>';
+  }
+}
+
+async function doPredict() {
+  const text = document.getElementById('inputText').value.trim();
+  const model = document.getElementById('modelSelect').value;
+  const box = document.getElementById('resultBox');
+  if (!text) { alert('请输入文本'); return; }
+  if (!model) { alert('暂无可用模型'); return; }
+  box.style.display = 'block';
+  box.className = 'result';
+  box.innerHTML = '分类中...';
+
+  try {
+    const resp = await fetch('/api/predict', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text, model})
+    });
+    const data = await resp.json();
+    if (!data.ok) throw new Error(data.error || '预测失败');
+
+    let html = '<div class="intent">意图：' + data.intent + '</div>';
+    html += '<div class="meta">模型：' + data.model +
+            '　响应时间：' + data.latency_ms.toFixed(1) + ' ms' +
+            (data.confidence != null ?
+             '　置信度：' + (data.confidence * 100).toFixed(1) + '%' : '') +
+            '</div>';
+    if (data.top3) {
+      html += '<div class="top3">';
+      for (const [name, prob] of data.top3) {
+        const pct = (prob * 100);
+        html += '<div class="top3-item"><span class="bar-label">' + name +
+                '</span><div class="bar" style="width:' + Math.max(pct * 3, 2) +
+                'px"></div><span class="bar-value">' + pct.toFixed(1) + '%</span></div>';
+      }
+      html += '</div>';
+    }
+    box.innerHTML = html;
+  } catch (e) {
+    box.className = 'result error';
+    box.innerHTML = '请求失败：' + e.message;
+  }
+}
+
+function clearAll() {
+  document.getElementById('inputText').value = '';
+  document.getElementById('resultBox').style.display = 'none';
+}
+
+loadModels();
+</script>
+</body>
+</html>

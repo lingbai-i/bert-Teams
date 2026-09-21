@@ -87,5 +87,10 @@ $RECYCLE.BIN/
 *.safetensors
 *.bin
 
+# --- 训练产物（模型权重与评估输出不进仓库，见 Agent.md 数据管理规则） ---
+models/
+checkpoints/
+outputs/
+
 # --- Node（若后续引入前端） ---
 node_modules/
