@@ -28,151 +28,23 @@ packed params（不是 Tensor），会被整块漏掉。同一模型两种算法
     python -m src.quantize --ckpt checkpoints/intent_bert/best.pt
 """
 from pathlib import Path
-from sklearn.metrics import (accuracy_score, classification_report, f1_score,
-                             precision_score, recall_score)
 from transformers import AutoTokenizer
-from typing import Any, Dict, List
 
 import argparse
 import json
 import logging
-import os
-import tempfile
-import time
 
 import torch
 
+from src.compress_bench import (bench_latency_bert, compute_metrics,
+                                measure_size_mb)
 from src.config import CLASS_FILE, CKPT_DIR, MAX_LEN, MODEL_DIR, TEST_FILE
 from src.data import load_labels
-from src.evaluate import load_any, predict_all
+from src.evaluate import load_any
 from src.model import load_classifier
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 logger = logging.getLogger(__name__)
-
-
-def bench_latency(model, tokenizer, device: str, n: int = 100) -> float:
-    """测量单条文本的平均推理延迟。
-
-    参数:
-        model: 待测模型。
-        tokenizer: 分词器。
-        device: 推理设备。
-        n: 测量次数，取均值，默认 100。
-
-    返回:
-        平均延迟，单位毫秒。
-
-    说明:
-        计时对象是纯前向传播：分词与设备搬运在计时循环之外只做一次，
-        循环内只调用 model(**enc)。因此该数字不含分词与 argmax 的开销，
-        比真实请求的端到端耗时略低。三件套使用同一实现，口径一致，可横向比较。
-
-        测量前先执行 10 次预热，排除首次调用时算子选择与内存分配的开销。
-
-        注意：延迟受机器负载影响极大。实测同一模型在本机 CPU 负载 68% 时
-        连续 5 次测得 26.2 / 72.7 / 76.7 / 88.0 / 88.2 ms，波动 3.4 倍。
-        因此只有同一次会话内相邻测出的相对关系才可信，绝对数字仅供同机比较。
-    """
-    enc = tokenizer("今天下午的会议改到几点了", return_tensors="pt",
-                    truncation=True, max_length=MAX_LEN)
-    enc = {k: v.to(device) for k, v in enc.items()}
-    model.eval()
-    with torch.no_grad():
-        for _ in range(10):  # 预热，排除首次调用的初始化开销
-            model(**enc)
-        t0 = time.perf_counter()
-        for _ in range(n):
-            model(**enc)
-    return (time.perf_counter() - t0) / n * 1000
-
-
-def measure_size_mb(model) -> float:
-    """测量模型序列化后的真实体积。
-
-    参数:
-        model: 待测量模型。
-
-    返回:
-        体积，单位 MB。
-
-    说明:
-        做法是把 state_dict 写进系统临时文件、取字节数、再删除，
-        因此不污染任何输出目录。
-
-        为什么不用 src.model.state_dict_size_mb：那个函数遍历 state_dict
-        逐张量求和，而动态量化后的 Linear 权重存放在 packed params 中
-        （不是 Tensor），会被整块漏掉。实测同一量化模型：
-            真实序列化大小 145.6 MB，逐张量求和只有 63.5 MB
-        即真实压缩比 37.3%，用后者会得出 16.3% 的假结论。
-
-        副作用：会经历一次完整的磁盘序列化，BERT 规模上耗时数秒。
-    """
-    handle, temp_name = tempfile.mkstemp(suffix=".pt")
-    # Windows 上文件被占用时 torch.save 无法写入，必须先关掉 mkstemp 返回的句柄
-    os.close(handle)
-    temp_path = Path(temp_name)
-    try:
-        torch.save(model.state_dict(), temp_path)
-        return temp_path.stat().st_size / 1024 / 1024
-    finally:
-        # 放在 finally 里：即使上面抛异常也要删掉临时文件
-        temp_path.unlink(missing_ok=True)
-
-
-def compute_metrics(model, tokenizer, texts: List[str], gold_labels: List[int],
-                    label_names: List[str],
-                    device: str) -> Dict[str, Any]:
-    """计算准确率与宏平均 precision/recall/F1，并生成逐类报告。
-
-    参数:
-        model: 待评估模型。
-        tokenizer: 分词器。
-        texts: 文本列表。
-        gold_labels: 真实标签 ID 列表，与 texts 等长。
-        label_names: 标签名列表，下标即标签 ID。
-        device: 推理设备。
-
-    返回:
-        含以下键的字典：
-        - sample_count: 样本条数
-        - accuracy: 准确率
-        - macro_precision / macro_recall / macro_f1: 宏平均三指标
-        - report: 每类的 precision/recall/F1 文本报告
-
-    说明:
-        批量前向复用 src.evaluate.predict_all，本文件不重复实现推理循环——
-        该函数按 model(input_ids=..., attention_mask=...).logits 调用，
-        与 BERT 系列的输出契约一致。
-
-        计算指标时显式传入 labels=range(类别数)，把标签空间固定为全部类别。
-        若不传，当某个类别在数据中缺席时 sklearn 会抛
-        「Number of classes does not match size of target_names」。
-        显式传 labels 后，缺席类别会以 support=0 的形式出现在报告里，
-        是可见的，而不是被静默忽略。
-
-        宏平均与准确率的区别：准确率受各类样本数影响；宏平均先按类别各算一个值
-        再对类别等权平均，少数类的表现不会被多数类淹没。两者差距大说明模型
-        在某些类别上明显偏弱。
-    """
-    predictions = predict_all(model, tokenizer, texts, device)
-    label_ids = list(range(len(label_names)))
-    return {
-        "sample_count": len(gold_labels),
-        "accuracy": float(accuracy_score(gold_labels, predictions)),
-        "macro_precision": float(precision_score(
-            gold_labels, predictions, labels=label_ids, average="macro",
-            zero_division=0)),
-        "macro_recall": float(recall_score(
-            gold_labels, predictions, labels=label_ids, average="macro",
-            zero_division=0)),
-        "macro_f1": float(f1_score(
-            gold_labels, predictions, labels=label_ids, average="macro",
-            zero_division=0)),
-        "report": classification_report(
-            gold_labels, predictions, labels=label_ids,
-            target_names=label_names, digits=4, zero_division=0),
-    }
 
 
 def verify_quantized_artifact(teacher_ckpt: Path, quantized_ckpt: Path,
@@ -230,29 +102,36 @@ def main(args) -> None:
     异常:
         FileNotFoundError: 教师权重不存在时由 load_classifier 抛出。
     """
-    # 动态量化只支持 CPU：INT8 算子没有 CUDA 实现，放 GPU 会直接报错
-    device = "cpu"
+    # 精度评估用 GPU（若可用）以加速：实测 11099 条在 GPU 上约 3.5 秒、
+    # 在 CPU 上需 188 秒，而两者算出的准确率完全一致（都是 0.9840）。
+    eval_device = "cuda" if torch.cuda.is_available() else "cpu"
+    # 量化与延迟测量必须在 CPU：INT8 算子没有 CUDA 实现，放 GPU 会在前向时直接报错
+    latency_device = "cpu"
     label_names = load_labels(CLASS_FILE)
     tokenizer = AutoTokenizer.from_pretrained(str(MODEL_DIR))
-    model = load_classifier(MODEL_DIR, Path(args.ckpt), len(label_names), device)
+    model = load_classifier(MODEL_DIR, Path(args.ckpt), len(label_names),
+                            eval_device)
 
     texts, labels = load_any(Path(args.input), label_names)
     logger.info(f"评估数据: {args.input}（{len(texts)} 条，{len(label_names)} 类）")
 
     metrics_before = compute_metrics(model, tokenizer, texts, labels,
-                                     label_names, device)
+                                     label_names, eval_device)
     size_before = measure_size_mb(model)
-    latency_before = bench_latency(model, tokenizer, device)
+    # 延迟测量前把模型搬到 CPU；量化本身也要求模型在 CPU 上
+    model.to(latency_device)
+    latency_before = bench_latency_bert(model, tokenizer, latency_device)
     logger.info(f"量化前: acc={metrics_before['accuracy']:.4f} "
                 f"macro_f1={metrics_before['macro_f1']:.4f} "
                 f"体积={size_before:.1f}MB CPU延迟={latency_before:.1f}ms")
 
     quantized = torch.quantization.quantize_dynamic(
         model, {torch.nn.Linear}, dtype=torch.qint8)
+    # 量化后的 INT8 模型只能跑在 CPU 上，评估与延迟测量都在 CPU 做
     metrics_after = compute_metrics(quantized, tokenizer, texts, labels,
-                                    label_names, device)
+                                    label_names, latency_device)
     size_after = measure_size_mb(quantized)
-    latency_after = bench_latency(quantized, tokenizer, device)
+    latency_after = bench_latency_bert(quantized, tokenizer, latency_device)
     logger.info(f"量化后: acc={metrics_after['accuracy']:.4f} "
                 f"macro_f1={metrics_after['macro_f1']:.4f} "
                 f"体积={size_after:.1f}MB CPU延迟={latency_after:.1f}ms")
@@ -266,7 +145,8 @@ def main(args) -> None:
                 f"（{artifact_bytes / 1024 / 1024:.1f}MB）")
 
     predicted = verify_quantized_artifact(
-        Path(args.ckpt), ckpt_path, len(label_names), tokenizer, device, texts[0])
+        Path(args.ckpt), ckpt_path, len(label_names), tokenizer,
+        latency_device, texts[0])
     logger.info(f"产物验证: 重新加载并推理首条样本 -> 标签 ID {predicted}"
                 f"（真实 {labels[0]}）")
 
