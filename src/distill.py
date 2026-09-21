@@ -196,6 +196,10 @@ def bench_latency_bert(model, tokenizer, device: str, n: int = 100) -> float:
 
     返回:
         平均延迟，单位毫秒。
+
+    说明:
+        计时对象是纯前向传播：分词与设备搬运在计时循环之外只做一次，
+        因此该数字不含分词与 argmax 的开销，与 quantize/prune 的实现口径一致。
     """
     enc = tokenizer("今天下午的会议改到几点了", return_tensors="pt",
                     truncation=True, max_length=MAX_LEN)
@@ -228,6 +232,7 @@ def bench_latency_bilstm(model, tokenizer, device: str,
         两类模型的调用签名不同——学生只接受 input_ids 与 attention_mask，
         不接受 token_type_ids，传 **enc 会直接报参数错误。
         写成两个函数能让签名差异在代码里直接可见。
+        计时对象同样是纯前向传播，不含分词与 argmax。
     """
     enc = tokenizer("今天下午的会议改到几点了", return_tensors="pt",
                     truncation=True, max_length=MAX_LEN)
@@ -380,6 +385,21 @@ def main(args) -> None:
     teacher.to("cpu")
     student.to("cpu")
 
+    # 评估前必须重新加载 dev 最优权重。
+    # 原因：训练循环结束后 student 内存里是「最后一轮」的权重，而交付产物是 dev
+    # 准确率最高那一轮保存的 best.pt，两者可能不是同一轮——本次实测 best 出现在
+    # 第 1 轮（dev_acc 0.9831），第 3 轮反而降到 0.9756。若直接用内存中的 student
+    # 出指标，metrics.json 报的就不是交付产物 best.pt 的精度。
+    student_ckpt = out_dir / "best.pt"
+    if not student_ckpt.exists():
+        raise FileNotFoundError(
+            f"未找到最优权重 {student_ckpt}：训练过程中 dev 准确率从未提升，"
+            f"无法确定交付产物，请检查验证集是否为空")
+    student.load_state_dict(
+        torch.load(str(student_ckpt), map_location="cpu", weights_only=True))
+    logger.info(f"已重新加载 dev 最优权重（best_dev_acc={best_dev_acc:.4f}）"
+                f"用于最终评估")
+
     teacher_metrics = metrics_from_predictions(
         predict_all(teacher, tokenizer, test_texts, "cpu"), test_labels,
         label_names)
@@ -404,7 +424,6 @@ def main(args) -> None:
                 f"体积={student_metrics['size_mb']:.1f}MB "
                 f"延迟={student_metrics['latency_ms']:.1f}ms")
 
-    student_ckpt = out_dir / "best.pt"
     predicted = verify_student_artifact(student_ckpt, vocab_size, len(label_names),
                                        tokenizer, test_texts[0])
     logger.info(f"产物验证: 重新加载并推理首条样本 -> 标签 ID {predicted}"
