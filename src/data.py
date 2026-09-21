@@ -11,7 +11,7 @@ from typing import List, Tuple
 
 import random
 import torch
-from src.config import TRAIN_FILE
+
 
 
 def load_labels(class_file: Path) -> List[str]:
@@ -149,11 +149,4 @@ def build_dataloader(
     return DataLoader(ds, batch_size=batch_size, shuffle=shuffle)
 
 
-if __name__ == '__main__':
-    # result = load_labels(config.CLASS_FILE)
-    # print(result)
-    # result = load_txt(config.TRAIN_FILE)
-    # print(result)
-    texts,labels = load_txt(TRAIN_FILE)
-    result = subsample(texts,labels,6,8)
-    print(result)
+
