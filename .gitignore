@@ -43,6 +43,7 @@ settings.local.py
 .zcode/
 .continue/
 .claude.json
+.workbuddy/
 
 # --- 测试产物与缓存 ---
 .pytest_cache/
