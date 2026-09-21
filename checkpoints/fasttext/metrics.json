@@ -2,8 +2,7 @@
   "args": {
     "epochs": 15,
     "lr": 0.5,
-    "autotune": 300,
-    "output_dir": "D:\\dl_case\\git_dev\\bert-Teams\\dev_jiangjn1996\\checkpoints\\fasttext"
+    "autotune": 300
   },
   "test_acc": 0.988467429498153,
   "latency_ms": 0.008521999989170581,
