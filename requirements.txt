@@ -1,0 +1,8 @@
+# 运行环境依赖（conda 环境 pytorch_gpu 已安装，版本如下）
+torch==2.5.1
+transformers==5.16.0
+tokenizers==0.23.1
+huggingface_hub==1.15.0
+numpy==2.0.1
+scikit-learn==1.9.0
+matplotlib==3.11.2
