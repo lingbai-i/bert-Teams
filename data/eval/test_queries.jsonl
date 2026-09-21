@@ -14,5 +14,5 @@
 {"query": "公积金缴纳比例", "intent": "hr_onboarding"}
 {"query": "离职证明多久能拿到", "intent": "hr_onboarding"}
 {"query": "年度体检怎么预约", "intent": "hr_onboarding"}
-{"query": "CEO 的工资是多少", "intent": "out_of_scope"}
-{"query": "别人的考勤记录能查吗", "intent": "out_of_scope"}
+{"query": "CEO 的工资是多少", "intent": "other_chitchat"}
+{"query": "别人的考勤记录能查吗", "intent": "other_chitchat"}

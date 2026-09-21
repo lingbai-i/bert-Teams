@@ -115,7 +115,7 @@ python -m app.flask_app --port 5000     # 浏览器打开 http://localhost:5000
 
 ## 六、数据说明
 
-- `data/train.txt` 202,500 条 / `test.txt`、`dev.txt` 各 11,250 条，格式 `文本\t标签ID`
+- `data/train.txt` 202,500 条 / `dev.txt` 10,000 条 / `test.txt` 11,099 条，格式 `文本\t标签ID`
 - `data/class.txt` 9 个意图标签（8 业务 + 其他闲聊），行号即标签 ID
 - `data/stopwords.txt` 749 个停用词（TF-IDF 用）
 - `data/eval/test_queries.jsonl` 人工真实问句评估集（初始 18 条，全员扩充至 100+）

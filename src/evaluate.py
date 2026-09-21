@@ -108,8 +108,13 @@ def main(args) -> None:
 
     acc = accuracy_score(gold, preds)
     macro_f1 = f1_score(gold, preds, average="macro")
-    report = classification_report(gold, preds, target_names=label_names, digits=4)
-    cm = confusion_matrix(gold, preds)
+    # 评估集可能不包含全部类别（如小规模人工评估集），
+    # 必须显式传入 labels 让报告/混淆矩阵对齐完整标签体系
+    all_ids = list(range(len(label_names)))
+    report = classification_report(gold, preds, labels=all_ids,
+                                   target_names=label_names, digits=4,
+                                   zero_division=0)
+    cm = confusion_matrix(gold, preds, labels=all_ids)
 
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
