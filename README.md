@@ -123,32 +123,50 @@ python -m app.flask_app --port 5000     # 浏览器打开 http://localhost:5000
 **数据质量提示**：训练/测试集由模板合成，同源同分布，BERT 分数会虚高。
 真实水平以人工评估集为准——这是答辩的重要亮点而非问题。
 
-## 六、目录结构
+## 七、目录结构
 
 ```
 bert-Teams/
-├── src/
-│   ├── config.py            # 全局配置单一入口
-│   ├── data.py              # 数据加载 / Dataset / 子采样
-│   ├── model.py             # BERT 分类器 / BiLSTM 学生模型
-│   ├── train.py             # BERT 基线训练（--subsample 支持 mini 训练）
-│   ├── evaluate.py          # 评估：acc/F1/混淆矩阵/badcase
-│   ├── rf_baseline.py       # 随机森林路线
-│   ├── fasttext_baseline.py # fasttext 路线
-│   ├── llm_baseline.py      # LLM 提示词路线
-│   ├── quantize.py          # 动态量化
-│   ├── distill.py           # 知识蒸馏
-│   ├── prune.py             # 全局非结构化剪枝
-│   └── predict.py           # 统一推理封装（部署层调用）
-├── app/
-│   ├── flask_app.py         # Flask 服务（/api/predict 多模型）
-│   └── templates/index.html # 测试页面（响应时间 + 清空 + 多模型切换）
-├── scripts/download_model.py
-├── data/  models/  checkpoints/  outputs/   # 后三者不入库
+├── src/                        # 核心代码
+│   ├── config.py               # 全局配置单一入口（路径与超参数）
+│   ├── data.py                 # 数据加载 / Dataset / 子采样
+│   ├── model.py                # BERT 分类器 / BiLSTM 学生模型
+│   ├── train.py                # BERT 基线训练（--subsample 支持 mini 训练）
+│   ├── evaluate.py             # 评估：acc / F1 / 混淆矩阵 / badcase
+│   ├── rf_baseline.py          # 路线① 随机森林（TF-IDF）
+│   ├── fasttext_baseline.py    # 路线② fasttext
+│   ├── llm_baseline.py         # 路线③ LLM 提示词（DeepSeek）
+│   ├── quantize.py             # 压缩① 动态量化
+│   ├── distill.py              # 压缩② 知识蒸馏（BERT → BiLSTM）
+│   ├── prune.py                # 压缩③ 全局非结构化剪枝
+│   └── predict.py              # 统一推理封装（部署层调用）
+│
+├── app/                        # 部署层（Flask）
+│   ├── flask_app.py            # Flask 服务（/api/models、/api/predict）
+│   └── templates/index.html    # 测试页面（响应时间 + 清空 + 多模型切换）
+│
+├── scripts/
+│   └── download_model.py       # 下载 bert-base-chinese 到 models/
+│
+├── data/                       # 数据集（均已入库）
+│   ├── train.txt / dev.txt / test.txt   # 训练 20.25 万 / 验证、测试各 1.1 万
+│   ├── class.txt               # 9 个意图标签，行号即标签 ID
+│   ├── stopwords.txt           # 749 个停用词（TF-IDF 用）
+│   ├── intent_train.csv        # 早期小规模数据集
+│   ├── eval/test_queries.jsonl # 人工真实问句评估集
+│   └── knowledge_base/         # 8 个部门的业务文档（28 篇 Markdown）
+│
+├── models/                     # 预训练模型，不入库
+├── checkpoints/                # 训练产物，不入库
+├── outputs/                    # 评估与图表产物，不入库
+│
+├── Agent.md                    # 代码规范（import / 注释 / 异常 / commit）
+├── CONTRIBUTING.md             # 协作流程（分支模型 / PR 规范）
+├── README.md                   # 本文件
 └── pyproject.toml / requirements.txt / .env.example
 ```
 
-## 七、时间轴（明天下午答辩）
+## 八、时间轴（明天下午答辩）
 
 | 时间 | 事项 | 负责人 |
 |------|------|--------|
@@ -159,7 +177,7 @@ bert-Teams/
 | 明午 | Flask 联调、结果合入 PPT、串讲演练 + 互相提问 | 组长+部署组 |
 | 止损线 | 明早 11:00 压缩/LLM 没结果就降级为「方案+初步实验」，不硬撑 | 组长 |
 
-## 八、答辩故事线
+## 九、答辩故事线
 
 1. 业务场景与数据介绍（9 类企业客服意图，20 万条）
 2. 四条路线横向对比表（精度/体积/延迟）——先 RF/fasttext 基线，再 BERT，再 LLM
@@ -168,7 +186,7 @@ bert-Teams/
 5. Flask 现场演示多模型对比
 6. 每人讲自己负责的模块（评委必问：你负责的哪部分？遇到什么问题？怎么优化？）
 
-## 九、协作纪律
+## 十、协作纪律
 
 - 分支流程见 [CONTRIBUTING.md](./CONTRIBUTING.md)：个人分支 → PR → `dev`
 - 代码/注释规范见 [Agent.md](./Agent.md)：中文注释、文件级 docstring、固定随机种子
