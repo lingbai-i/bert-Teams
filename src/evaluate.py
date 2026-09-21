@@ -25,6 +25,7 @@ from typing import Dict, List, Sequence, Tuple
 import argparse
 import collections
 import datetime
+import hashlib
 import json
 import logging
 import re
@@ -116,6 +117,27 @@ def save_confusion_matrix(cm: np.ndarray, label_names: List[str], out_path: Path
     plt.close(fig)
 
 
+def file_sha256(path: Path, chunk_size: int = 1 << 20) -> str:
+    """计算权重文件的 SHA256，用于在产物里钉住本次评估的模型版本。
+
+    背景：models/best.pt 会被反复替换（换权重后指标变化，但文件名不变），
+    只记录路径无法回溯某个指标到底出自哪份权重。项目实践中曾出现评估中途
+    权重被覆盖、指标前后不一致的情况，因此把哈希写进产物作为版本凭证。
+
+    参数:
+        path: 待计算的文件路径。
+        chunk_size: 分块读取字节数，避免 390MB 权重一次性读入内存。
+
+    返回:
+        十六进制 SHA256 字符串。
+    """
+    digest = hashlib.sha256()
+    with open(path, "rb") as f:
+        for block in iter(lambda: f.read(chunk_size), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def load_stopwords(path: Path) -> set:
     """读取停用词表，用于过滤高频词统计中的噪声词。
 
@@ -159,7 +181,7 @@ def top_terms(texts: List[str], stopwords: set, topk: int = 8) -> List[Tuple[str
 
 def write_badcases(texts: List[str], gold: Sequence[int], preds: Sequence[int],
                    label_names: List[str], dataset: Path, ckpt: Path, out_path: Path,
-                   max_examples: int = 5) -> Dict[str, object]:
+                   ckpt_sha: str, max_examples: int = 5) -> Dict[str, object]:
     """按「真实标签 -> 预测标签」归类错误样本并写出 badcases.txt。
 
     输出分三节，逐层从“现象”走到“原因”：
@@ -177,6 +199,7 @@ def write_badcases(texts: List[str], gold: Sequence[int], preds: Sequence[int],
         dataset: 评估数据文件路径，写入报告头便于回溯。
         ckpt: 本次评估所用权重路径，写入报告头便于回溯。
         out_path: badcases.txt 输出路径。
+        ckpt_sha: 权重文件的 SHA256，写入报告头以便回溯模型版本。
         max_examples: 每个混淆对最多列出的示例条数。
 
     返回:
@@ -197,7 +220,7 @@ def write_badcases(texts: List[str], gold: Sequence[int], preds: Sequence[int],
     lines: List[str] = ["# bad case 归类分析", ""]
     lines.append(f"生成时间: {datetime.datetime.now():%Y-%m-%d %H:%M:%S}")
     lines.append(f"评估数据: {dataset}")
-    lines.append(f"权重文件: {ckpt}")
+    lines.append(f"权重文件: {ckpt}（sha256 {ckpt_sha[:16]}）")
     lines.append(f"样本数: {total}    错误数: {bad}    错误率: {bad / max(total, 1) * 100:.2f}%")
     lines.append("")
 
@@ -278,12 +301,15 @@ def main(args) -> None:
         f"accuracy = {acc:.4f}\nmacro_f1 = {macro_f1:.4f}\nweighted_f1 = {weighted_f1:.4f}\n\n{report}",
         encoding="utf-8", newline="\n")
     save_confusion_matrix(cm, label_names, out_dir / "confusion_matrix.png")
+    ckpt_sha = file_sha256(Path(args.ckpt))
+    logger.info(f"权重 sha256={ckpt_sha[:16]}（{args.ckpt}）")
     summary = write_badcases(texts, gold, preds, label_names, dataset, Path(args.ckpt),
-                             out_dir / "badcases.txt", args.max_examples)
+                             out_dir / "badcases.txt", ckpt_sha, args.max_examples)
 
     metrics = {
         "input": str(dataset),
         "ckpt": str(args.ckpt),
+        "ckpt_sha256": ckpt_sha,
         "device": device,
         "n": len(texts),
         "accuracy": round(acc, 4),
