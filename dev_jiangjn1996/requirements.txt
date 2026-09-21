@@ -1,0 +1,15 @@
+# 与 pyproject.toml 保持同步（依赖以 pyproject.toml 为准）
+# 全组统一 Python 3.11（fasttext-wheel 仅提供到 3.11 的 Windows 预编译包）。
+# 注意：Windows 下 PyPI 的 torch 默认是 CPU 版。
+# 有 NVIDIA GPU 的机器请先按 README「环境安装」用 PyTorch 官方源单独安装 CUDA 版 torch，
+# 再安装其余依赖。
+torch>=2.2
+transformers>=4.44
+scikit-learn>=1.4
+matplotlib>=3.8
+flask>=3.0
+numpy>=1.26
+jieba>=0.42
+requests>=2.31
+python-dotenv>=1.0
+fasttext-wheel>=0.9.2
