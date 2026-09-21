@@ -1,0 +1,859 @@
+{
+  "runtime": {
+    "python": "3.11.16",
+    "numpy": "2.4.6",
+    "matplotlib": "3.11.2"
+  },
+  "input_sha256": {
+    "class.txt": "f18d867322e1e4651dba468ecba5ccbfe0f13eda02b7a111ff2236b3176aa73c",
+    "train.txt": "acd76cad1c46a2cd21985bde3839df0446280845cc49fd6f21e13ccd48f8eeb9",
+    "dev.txt": "c2572a090fd7c6919ab22a275c684e301571af30c0c5cf3405aee6d7071e4c7f",
+    "test.txt": "db060ec3a39166faa9418aa60aa1850e0d81d5736cc52a6fad93706ac35006dd",
+    "eval/test_queries.jsonl": "21e75286418c652f0a81ca9a6bffb661c4c1dac166671213a36c7978071f08c2"
+  },
+  "classes": [
+    "policy_attendance",
+    "it_vpn",
+    "finance_expense",
+    "hr_onboarding",
+    "admin_logistics",
+    "engineering_eq",
+    "legal_contract",
+    "sales_marketing",
+    "other_chitchat"
+  ],
+  "splits": {
+    "train": {
+      "rows": 202500,
+      "class_counts": [
+        22500,
+        22500,
+        22500,
+        22500,
+        22500,
+        22500,
+        22500,
+        22500,
+        22500
+      ],
+      "unique_texts": 201234,
+      "duplicate_excess_rows": 1266,
+      "duplicate_excess_rate": 0.006251851851851852,
+      "conflicting_texts": 1266,
+      "length": {
+        "min": 5.0,
+        "p25": 8.0,
+        "median": 9.0,
+        "p75": 10.0,
+        "p95": 12.0,
+        "p99": 14.0,
+        "max": 19.0,
+        "mean": 8.990923456790123,
+        "std_population": 1.7869807868057066
+      }
+    },
+    "dev": {
+      "rows": 10000,
+      "class_counts": [
+        1250,
+        1250,
+        1250,
+        1250,
+        1250,
+        1250,
+        1250,
+        1250,
+        0
+      ],
+      "unique_texts": 9998,
+      "duplicate_excess_rows": 2,
+      "duplicate_excess_rate": 0.0002,
+      "conflicting_texts": 2,
+      "length": {
+        "min": 5.0,
+        "p25": 8.0,
+        "median": 9.0,
+        "p75": 10.0,
+        "p95": 12.0,
+        "p99": 13.0,
+        "max": 16.0,
+        "mean": 8.9045,
+        "std_population": 1.681778745852141
+      }
+    },
+    "test": {
+      "rows": 11099,
+      "class_counts": [
+        1250,
+        1250,
+        1250,
+        1250,
+        1250,
+        1250,
+        1250,
+        1250,
+        1099
+      ],
+      "unique_texts": 11095,
+      "duplicate_excess_rows": 4,
+      "duplicate_excess_rate": 0.00036039282818271914,
+      "conflicting_texts": 4,
+      "length": {
+        "min": 5.0,
+        "p25": 8.0,
+        "median": 9.0,
+        "p75": 10.0,
+        "p95": 12.0,
+        "p99": 14.0,
+        "max": 19.0,
+        "mean": 8.999909901792954,
+        "std_population": 1.7940898635768565
+      }
+    }
+  },
+  "exact_overlap": {
+    "train_to_dev": {
+      "target_rows": 10000,
+      "matched_rows": 147,
+      "matched_unique_texts": 147,
+      "matched_rate": 0.0147,
+      "label_disagreement_rows": 147
+    },
+    "train_to_test": {
+      "target_rows": 11099,
+      "matched_rows": 135,
+      "matched_unique_texts": 135,
+      "matched_rate": 0.012163257951166772,
+      "label_disagreement_rows": 135
+    },
+    "dev_to_test": {
+      "target_rows": 11099,
+      "matched_rows": 3,
+      "matched_unique_texts": 3,
+      "matched_rate": 0.0002702946211370394,
+      "label_disagreement_rows": 3
+    }
+  },
+  "core_overlap": {
+    "train_to_dev": {
+      "target_rows": 10000,
+      "matched_rows": 10000,
+      "matched_unique_texts": 1095,
+      "matched_rate": 1.0,
+      "label_disagreement_rows": 0
+    },
+    "train_to_test": {
+      "target_rows": 11099,
+      "matched_rows": 11099,
+      "matched_unique_texts": 1727,
+      "matched_rate": 1.0,
+      "label_disagreement_rows": 0
+    },
+    "dev_to_test": {
+      "target_rows": 11099,
+      "matched_rows": 9550,
+      "matched_unique_texts": 720,
+      "matched_rate": 0.860437877286242,
+      "label_disagreement_rows": 11
+    }
+  },
+  "core_unique_counts": {
+    "train": 2845,
+    "dev": 1095,
+    "test": 1727
+  },
+  "normalization_rules": {
+    "prefixes": [
+      "咨询个事",
+      "想了解下",
+      "我想问下",
+      "请教一下",
+      "请问一下",
+      "麻烦问下",
+      "咨询下",
+      "想知道",
+      "想问下",
+      "打扰了",
+      "问个事",
+      "你好",
+      "关于",
+      "咱们",
+      "在吗",
+      "请问",
+      "那个",
+      "咱",
+      "哎"
+    ],
+    "suffixes": [
+      "需要什么材料",
+      "如何办理",
+      "怎么办理",
+      "怎么操作",
+      "怎么申请",
+      "麻烦说下",
+      "怎么办",
+      "怎么弄",
+      "是什么",
+      "的政策",
+      "的规则",
+      "要多久",
+      "谢谢啦",
+      "麻烦了",
+      "在哪",
+      "审批",
+      "时间",
+      "条件",
+      "流程",
+      "要求",
+      "规定",
+      "谢谢",
+      "辛苦",
+      "!",
+      "?",
+      "~",
+      "。",
+      "哈",
+      "！",
+      "？"
+    ]
+  },
+  "human": {
+    "rows": 18,
+    "class_counts": {
+      "policy_attendance": 4,
+      "it_vpn": 4,
+      "finance_expense": 4,
+      "hr_onboarding": 4,
+      "out_of_scope": 2
+    },
+    "missing_classes": [
+      "admin_logistics",
+      "engineering_eq",
+      "legal_contract",
+      "sales_marketing",
+      "other_chitchat"
+    ],
+    "unknown_labels": [
+      "out_of_scope"
+    ],
+    "exact_train_matches": 0
+  },
+  "conflicting_text_count_all_splits": 1557,
+  "conflicting_text_examples": [
+    {
+      "text": "你好你好保密协议",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好你好合同模板谢谢",
+      "labels": [
+        6,
+        7
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好你好育儿假",
+      "labels": [
+        0,
+        3
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好你好育儿假哈",
+      "labels": [
+        0,
+        3
+      ],
+      "splits": {
+        "train": 1,
+        "test": 1
+      }
+    },
+    {
+      "text": "你好保密协议",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好保密协议在哪",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好保密协议怎么办",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 1,
+        "dev": 1
+      }
+    },
+    {
+      "text": "你好保密协议怎么办理",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好保密协议怎么申请",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好保密协议时间",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好保密协议流程",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 1,
+        "dev": 1
+      }
+    },
+    {
+      "text": "你好保密协议的政策",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好保密协议的规则",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 1,
+        "dev": 1
+      }
+    },
+    {
+      "text": "你好保密协议规定",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好保密协议规定辛苦",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好保密协议谢谢",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好保密协议辛苦",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 1,
+        "dev": 1
+      }
+    },
+    {
+      "text": "你好公司加班费计算",
+      "labels": [
+        0,
+        2
+      ],
+      "splits": {
+        "train": 2
+      }
+    },
+    {
+      "text": "你好公司竞业协议",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 1,
+        "test": 1
+      }
+    },
+    {
+      "text": "你好关于保密协议",
+      "labels": [
+        3,
+        6
+      ],
+      "splits": {
+        "train": 2
+      }
+    }
+  ],
+  "top_core_groups": [
+    {
+      "core": "报销",
+      "unique_variants": 779,
+      "split_rows": {
+        "train": 705,
+        "dev": 39,
+        "test": 35
+      },
+      "labels": {
+        "finance_expense": 779
+      },
+      "examples": [
+        "你好你好报销审批",
+        "你好你好报销审批谢谢啦",
+        "你好你好报销审批辛苦",
+        "你好你好报销流程",
+        "你好你好报销流程谢谢",
+        "你好关于报销审批"
+      ]
+    },
+    {
+      "core": "加班费计算",
+      "unique_variants": 573,
+      "split_rows": {
+        "train": 693,
+        "dev": 44,
+        "test": 34
+      },
+      "labels": {
+        "finance_expense": 385,
+        "policy_attendance": 386
+      },
+      "examples": [
+        "你好你好加班费计算",
+        "你好关于加班费计算",
+        "你好关于加班费计算辛苦",
+        "你好关于加班费计算？",
+        "你好加班费计算",
+        "你好加班费计算?"
+      ]
+    },
+    {
+      "core": "育儿假",
+      "unique_variants": 568,
+      "split_rows": {
+        "train": 702,
+        "dev": 46,
+        "test": 32
+      },
+      "labels": {
+        "policy_attendance": 388,
+        "hr_onboarding": 392
+      },
+      "examples": [
+        "你好你好育儿假",
+        "你好你好育儿假哈",
+        "你好关于育儿假",
+        "你好咨询下育儿假",
+        "你好咨询个事育儿假",
+        "你好咨询个事育儿假?"
+      ]
+    },
+    {
+      "core": "陪产假",
+      "unique_variants": 558,
+      "split_rows": {
+        "train": 694,
+        "dev": 40,
+        "test": 23
+      },
+      "labels": {
+        "policy_attendance": 370,
+        "hr_onboarding": 387
+      },
+      "examples": [
+        "你好你好陪产假",
+        "你好你好陪产假谢谢啦",
+        "你好关于陪产假",
+        "你好关于陪产假~",
+        "你好咨询下陪产假",
+        "你好咨询个事陪产假"
+      ]
+    },
+    {
+      "core": "合同模板",
+      "unique_variants": 550,
+      "split_rows": {
+        "train": 688,
+        "dev": 44,
+        "test": 37
+      },
+      "labels": {
+        "sales_marketing": 390,
+        "legal_contract": 379
+      },
+      "examples": [
+        "你好你好合同模板",
+        "你好你好合同模板谢谢",
+        "你好你好合同模板？",
+        "你好合同模板",
+        "你好合同模板?",
+        "你好合同模板~"
+      ]
+    },
+    {
+      "core": "竞业协议",
+      "unique_variants": 544,
+      "split_rows": {
+        "train": 664,
+        "dev": 42,
+        "test": 37
+      },
+      "labels": {
+        "legal_contract": 383,
+        "hr_onboarding": 360
+      },
+      "examples": [
+        "你好你好竞业协议",
+        "你好你好竞业协议麻烦了",
+        "你好关于竞业协议",
+        "你好咨询下竞业协议",
+        "你好咱们竞业协议",
+        "你好咱们竞业协议~"
+      ]
+    },
+    {
+      "core": "保密协议",
+      "unique_variants": 542,
+      "split_rows": {
+        "train": 678,
+        "dev": 40,
+        "test": 29
+      },
+      "labels": {
+        "legal_contract": 390,
+        "hr_onboarding": 357
+      },
+      "examples": [
+        "你好你好保密协议",
+        "你好保密协议",
+        "你好保密协议?",
+        "你好保密协议在哪",
+        "你好保密协议如何办理",
+        "你好保密协议审批"
+      ]
+    },
+    {
+      "core": "病假工资",
+      "unique_variants": 541,
+      "split_rows": {
+        "train": 678,
+        "dev": 24,
+        "test": 42
+      },
+      "labels": {
+        "hr_onboarding": 377,
+        "policy_attendance": 367
+      },
+      "examples": [
+        "你好你好病假工资",
+        "你好关于病假工资",
+        "你好关于病假工资？",
+        "你好咨询下病假工资",
+        "你好咨询下病假工资哈",
+        "你好咨询下病假工资辛苦"
+      ]
+    },
+    {
+      "core": "合同扫描",
+      "unique_variants": 425,
+      "split_rows": {
+        "train": 376,
+        "dev": 22,
+        "test": 27
+      },
+      "labels": {
+        "legal_contract": 425
+      },
+      "examples": [
+        "你好你好合同扫描谢谢",
+        "你好关于合同扫描",
+        "你好合同扫描",
+        "你好合同扫描?",
+        "你好合同扫描~",
+        "你好合同扫描在哪"
+      ]
+    },
+    {
+      "core": "订单变更",
+      "unique_variants": 425,
+      "split_rows": {
+        "train": 378,
+        "dev": 27,
+        "test": 20
+      },
+      "labels": {
+        "sales_marketing": 425
+      },
+      "examples": [
+        "你好你好订单变更",
+        "你好关于订单变更",
+        "你好咨询个事订单变更",
+        "你好想了解下订单变更",
+        "你好想知道订单变更?",
+        "你好想问下订单变更"
+      ]
+    },
+    {
+      "core": "争议管辖",
+      "unique_variants": 420,
+      "split_rows": {
+        "train": 375,
+        "dev": 19,
+        "test": 26
+      },
+      "labels": {
+        "legal_contract": 420
+      },
+      "examples": [
+        "争议管辖?",
+        "争议管辖~",
+        "争议管辖在哪",
+        "争议管辖在哪~",
+        "争议管辖在哪谢谢啦",
+        "争议管辖在哪辛苦"
+      ]
+    },
+    {
+      "core": "中标通知",
+      "unique_variants": 419,
+      "split_rows": {
+        "train": 376,
+        "dev": 19,
+        "test": 24
+      },
+      "labels": {
+        "sales_marketing": 419
+      },
+      "examples": [
+        "中标通知?",
+        "中标通知~",
+        "中标通知在哪",
+        "中标通知在哪哈",
+        "中标通知在哪谢谢",
+        "中标通知在哪谢谢啦"
+      ]
+    },
+    {
+      "core": "采购合同",
+      "unique_variants": 419,
+      "split_rows": {
+        "train": 367,
+        "dev": 24,
+        "test": 28
+      },
+      "labels": {
+        "legal_contract": 419
+      },
+      "examples": [
+        "你好你好采购合同",
+        "你好关于采购合同",
+        "你好咨询下采购合同?",
+        "你好咨询下采购合同谢谢啦",
+        "你好咨询个事采购合同",
+        "你好咱们采购合同"
+      ]
+    },
+    {
+      "core": "MTTR",
+      "unique_variants": 417,
+      "split_rows": {
+        "train": 366,
+        "dev": 26,
+        "test": 25
+      },
+      "labels": {
+        "engineering_eq": 417
+      },
+      "examples": [
+        "MTTR哈",
+        "MTTR在哪",
+        "MTTR在哪~",
+        "MTTR在哪？",
+        "MTTR如何办理",
+        "MTTR如何办理?"
+      ]
+    },
+    {
+      "core": "公积金比例",
+      "unique_variants": 417,
+      "split_rows": {
+        "train": 370,
+        "dev": 24,
+        "test": 23
+      },
+      "labels": {
+        "hr_onboarding": 417
+      },
+      "examples": [
+        "你好你好公积金比例~",
+        "你好你好公积金比例辛苦",
+        "你好公积金比例",
+        "你好公积金比例~",
+        "你好公积金比例如何办理",
+        "你好公积金比例审批"
+      ]
+    },
+    {
+      "core": "变频器报警",
+      "unique_variants": 417,
+      "split_rows": {
+        "train": 372,
+        "dev": 24,
+        "test": 21
+      },
+      "labels": {
+        "engineering_eq": 417
+      },
+      "examples": [
+        "你好你好变频器报警",
+        "你好关于变频器报警",
+        "你好变频器报警",
+        "你好变频器报警哈",
+        "你好变频器报警如何办理?",
+        "你好变频器报警如何办理~"
+      ]
+    },
+    {
+      "core": "班车时刻",
+      "unique_variants": 417,
+      "split_rows": {
+        "train": 374,
+        "dev": 23,
+        "test": 20
+      },
+      "labels": {
+        "admin_logistics": 417
+      },
+      "examples": [
+        "你好你好班车时刻",
+        "你好关于班车时刻辛苦",
+        "你好关于班车时刻？",
+        "你好咨询下班车时刻",
+        "你好咨询下班车时刻麻烦了",
+        "你好咨询个事班车时刻"
+      ]
+    },
+    {
+      "core": "绩效考核",
+      "unique_variants": 416,
+      "split_rows": {
+        "train": 370,
+        "dev": 26,
+        "test": 20
+      },
+      "labels": {
+        "hr_onboarding": 416
+      },
+      "examples": [
+        "你好你好绩效考核",
+        "你好你好绩效考核谢谢",
+        "你好关于绩效考核",
+        "你好咨询下绩效考核",
+        "你好咨询个事绩效考核",
+        "你好咱绩效考核"
+      ]
+    },
+    {
+      "core": "商标注册",
+      "unique_variants": 415,
+      "split_rows": {
+        "train": 364,
+        "dev": 22,
+        "test": 29
+      },
+      "labels": {
+        "legal_contract": 415
+      },
+      "examples": [
+        "你好你好商标注册",
+        "你好咨询下商标注册",
+        "你好咨询个事商标注册",
+        "你好商标注册",
+        "你好商标注册哈",
+        "你好商标注册在哪"
+      ]
+    },
+    {
+      "core": "宿舍申请",
+      "unique_variants": 415,
+      "split_rows": {
+        "train": 368,
+        "dev": 22,
+        "test": 25
+      },
+      "labels": {
+        "admin_logistics": 415
+      },
+      "examples": [
+        "你好你好宿舍申请",
+        "你好关于宿舍申请~",
+        "你好咨询下宿舍申请",
+        "你好咨询个事宿舍申请",
+        "你好咱们宿舍申请",
+        "你好咱宿舍申请"
+      ]
+    }
+  ]
+}
