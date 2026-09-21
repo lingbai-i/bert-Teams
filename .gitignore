@@ -90,7 +90,13 @@ $RECYCLE.BIN/
 # --- 训练产物（模型权重与评估输出不进仓库，见 Agent.md 数据管理规则） ---
 models/
 checkpoints/
-outputs/
+outputs/*
+# Issue #13 要求将可复核的 EDA 报告随 PR 交付，其余实验产物仍忽略。
+!outputs/eda/
+outputs/eda/*
+!outputs/eda/*.md
+!outputs/eda/*.json
+!outputs/eda/*.png
 
 # --- Node（若后续引入前端） ---
 node_modules/

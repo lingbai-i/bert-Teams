@@ -13,3 +13,5 @@ jieba>=0.42
 requests>=2.31
 python-dotenv>=1.0
 fasttext-wheel>=0.9.2
+# 开发验证依赖，对应 pyproject.toml 的 dev 依赖组。
+pytest>=8
