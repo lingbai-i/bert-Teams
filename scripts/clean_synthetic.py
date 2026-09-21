@@ -20,9 +20,9 @@
     - 输出顺序保持输入顺序，便于与原文件逐行比对。
 
 用法：
-    python scripts/clean_synthetic.py --input data/test.txt --output data/clean/test.txt
-    python scripts/clean_synthetic.py --input data/train.txt --output data/clean/train.txt
-    python scripts/clean_synthetic.py --input data/dev.txt --output data/clean/dev.txt
+    python scripts/clean_synthetic.py --input data/raw/test.txt --output data/test.txt
+    python scripts/clean_synthetic.py --input data/raw/train.txt --output data/train.txt
+    python scripts/clean_synthetic.py --input data/raw/dev.txt --output data/dev.txt
 """
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
