@@ -6,10 +6,60 @@
 <title>企业意图分类系统</title>
 <style>
   /* ============================================================
+     自托管字体：不引任何 CDN，答辩现场断网也不影响渲染。
+     MiSans 已按页面实际用到的字符子集化（7.7MB -> 128KB）。
+     font-display: swap 保证字体未就绪时先用回退字体渲染，不白屏。
+     ============================================================ */
+  @font-face {
+    font-family: "MiSans";
+    src: url("/static/fonts/MiSans-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "MiSans";
+    src: url("/static/fonts/MiSans-Bold.woff2") format("woff2");
+    font-weight: 600 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("/static/fonts/JetBrainsMono-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("/static/fonts/JetBrainsMono-Bold.woff2") format("woff2");
+    font-weight: 600 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* ============================================================
      设计令牌：颜色 / 圆角 / 阴影 / 字体
      集中定义便于整体换肤（后续加深色模式只需覆盖这一块变量）
      ============================================================ */
+  /* 注册自定义属性：未注册的 <angle> 无法参与 CSS 过渡，
+     conic 描边会瞬间跳变而不是平滑旋转。 */
+  @property --angle-1 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -75deg;
+  }
+  @property --angle-2 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -45deg;
+  }
+
   :root {
+    --anim-hover-time: 400ms;
+    --anim-hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
+
     --bg:            #F7F8FC;
     --surface:       #FFFFFF;
     --surface-soft:  #FAFBFF;
@@ -43,11 +93,75 @@
     --sh-3: 0 4px 14px rgba(23,26,38,.06), 0 20px 48px rgba(23,26,38,.09);
 
     /* 字体全部走系统栈，不引外网字体，保证离线可用 */
-    --font: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei",
-            "Source Han Sans SC", "Noto Sans CJK SC", system-ui,
-            -apple-system, "Segoe UI", sans-serif;
-    --font-num: "SF Mono", "JetBrains Mono", "Cascadia Mono", Consolas,
-                "PingFang SC", monospace;
+    --font: "MiSans", "PingFang SC", "HarmonyOS Sans SC",
+            "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC",
+            system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-num: "JetBrains Mono", "SF Mono", "Cascadia Mono", Consolas,
+                "MiSans", monospace;
+
+    /* 玻璃按钮底色：两个主题各一套，浅底需要深玻璃才压得住 */
+    --glass-primary: linear-gradient(-75deg, #2B3350, #47537F 42%, #2B3350);
+    --glass-ghost: linear-gradient(-75deg,
+      rgba(255,255,255,.55), rgba(255,255,255,.96) 42%,
+      rgba(255,255,255,.55));
+    --glass-primary-text: #F2F5FF;
+
+    /* 点阵网格 */
+    --dot: rgba(79, 107, 255, .22);
+
+    /* 「最快」标记：用琥珀金与主色蓝拉开语义距离——
+       蓝色代表交互态（当前选中），金色代表性能标记（跑得最快） */
+    --best-bg: linear-gradient(180deg, #FFD166, #F2A33C);
+    --best-text: #6B3F00;
+    --best-glow: rgba(242, 163, 60, .45);
+    --best-row: rgba(242, 163, 60, .08);
+  }
+
+  /* ============================================================
+     深色主题：只覆盖设计令牌，其余样式自动跟随
+     ============================================================ */
+  [data-theme="dark"] {
+    --bg:            #0A0D17;
+    --surface:       #121623;
+    --surface-soft:  #171C2C;
+    --border:        #232942;
+    --border-strong: #2E3654;
+
+    --text-1: #EEF0F8;
+    --text-2: #A2AAC4;
+    --text-3: #6C7492;
+
+    --primary:      #6C84FF;
+    --primary-600:  #5A72F0;
+    --primary-soft: #1A2140;
+    --accent:       #A78BFA;
+
+    --success:      #34D399;
+    --success-soft: #0F2A20;
+    --success-line: #1E4A37;
+    --danger:       #F87171;
+    --danger-soft:  #2B1418;
+    --danger-line:  #4C2328;
+
+    --sh-1: 0 1px 2px rgba(0,0,0,.5);
+    --sh-2: 0 2px 8px rgba(0,0,0,.5), 0 10px 26px rgba(0,0,0,.42);
+    --sh-3: 0 4px 18px rgba(0,0,0,.55), 0 26px 60px rgba(0,0,0,.5);
+
+    /* 深色下改回参考实现的「浅玻璃」——这才是这套按钮的原生形态 */
+    --glass-primary: linear-gradient(-75deg,
+      rgba(120,146,255,.16), rgba(120,146,255,.44) 42%,
+      rgba(120,146,255,.16));
+    --glass-ghost: linear-gradient(-75deg,
+      rgba(255,255,255,.05), rgba(255,255,255,.17) 42%,
+      rgba(255,255,255,.05));
+    --glass-primary-text: #F4F7FF;
+
+    --dot: rgba(140, 160, 255, .30);
+
+    --best-bg: linear-gradient(180deg, #FFD98A, #F0A93E);
+    --best-text: #4A2C00;
+    --best-glow: rgba(240, 169, 62, .38);
+    --best-row: rgba(240, 169, 62, .12);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -73,7 +187,62 @@
   .shell { width: 100%; max-width: 880px; }
 
   /* ---------------- 页头 ---------------- */
-  .hero { margin-bottom: 26px; }
+  /* 深色下把光晕提亮，否则整页发闷 */
+  [data-theme="dark"] body {
+    background-image:
+      radial-gradient(900px 520px at 12% -8%,  rgba(108,132,255,.22), transparent 62%),
+      radial-gradient(760px 460px at 96% 2%,   rgba(167,139,250,.17), transparent 58%),
+      radial-gradient(680px 420px at 50% 112%, rgba(56,189,248,.11), transparent 60%);
+  }
+
+  /* 点阵网格：固定在视口上，用径向遮罩向边缘淡出 */
+  .bg-dots {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(ellipse 80% 64% at 50% 0%,
+                                        #000 24%, transparent 78%);
+    mask-image: radial-gradient(ellipse 80% 64% at 50% 0%,
+                                 #000 24%, transparent 78%);
+  }
+  .dot { fill: var(--dot); }
+
+  .hero { position: relative; margin-bottom: 26px; }
+
+  /* ---------------- 主题切换按钮 ---------------- */
+  .theme-toggle {
+    all: unset;
+    position: absolute;
+    top: 0;
+    right: 0;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--text-2);
+    box-shadow: var(--sh-1);
+    cursor: pointer;
+    transition: color .18s, border-color .18s, transform .18s,
+                box-shadow .18s, background .18s;
+  }
+  .theme-toggle:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: var(--sh-2);
+  }
+  .theme-toggle svg { width: 18px; height: 18px; display: block; }
+  .theme-toggle .icon-sun { display: none; }
+  [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+  [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
   .badge {
     display: inline-flex;
@@ -84,7 +253,7 @@
     background: var(--primary-soft);
     color: var(--primary-600);
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 14px;
   }
   .badge::before {
@@ -95,11 +264,23 @@
   }
 
   h1 {
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 700;
-    letter-spacing: -.02em;
-    line-height: 1.25;
-    margin-bottom: 8px;
+    letter-spacing: -.025em;
+    line-height: 1.22;
+    margin-bottom: 9px;
+    padding-right: 56px;
+    /* 深灰到蓝紫的渐变文字：有色彩但不牺牲对比度 */
+    background: linear-gradient(115deg, #14172A 8%, #2F44C4 58%, #7C46E8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  [data-theme="dark"] h1 {
+    background: linear-gradient(115deg, #FFFFFF 6%, #A9BBFF 52%, #C4A8FF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   .lede {
     font-size: 14px;
@@ -120,7 +301,7 @@
   .field-label {
     display: block;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-3);
     letter-spacing: .02em;
     margin-bottom: 8px;
@@ -152,43 +333,202 @@
   }
   textarea::placeholder { color: var(--text-3); }
 
-  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  /* ============================================================
+     玻璃拟态按钮（移植自 Uiverse 参考实现）
+     结构：.button-wrap > button > span，外加 .button-shadow 投影层
+     ============================================================ */
+  .actions { display: flex; gap: 22px; flex-wrap: wrap; }
 
-  button {
+  .button-wrap {
+    position: relative;
+    z-index: 2;
+    border-radius: 999px;
+    background: transparent;
+    pointer-events: none;
+    transition: transform var(--anim-hover-time) var(--anim-hover-ease);
+  }
+
+  /* 投影层：放大一圈再模糊，形成按钮下方的柔和落影 */
+  .button-shadow {
+    --cut: 1.5em;
+    position: absolute;
+    width: calc(100% + var(--cut));
+    height: calc(100% + var(--cut));
+    top: calc(0% - var(--cut) / 2);
+    left: calc(0% - var(--cut) / 2);
+    filter: blur(clamp(2px, .11em, 8px));
+    overflow: visible;
+    pointer-events: none;
+    transition: filter var(--anim-hover-time) var(--anim-hover-ease);
+  }
+  .button-shadow::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    border-radius: 999px;
+    background: linear-gradient(180deg,
+                rgba(23,26,38,.26), rgba(23,26,38,.10));
+    width: calc(100% - var(--cut) - .25em);
+    height: calc(100% - var(--cut) - .25em);
+    top: calc(var(--cut) - .55em);
+    left: calc(var(--cut) - .75em);
+    opacity: 1;
+    transition: all var(--anim-hover-time) var(--anim-hover-ease);
+  }
+
+  .button-wrap button {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-block;
     font-family: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 10px 20px;
-    border-radius: var(--r-md);
-    border: 1px solid transparent;
     cursor: pointer;
-    transition: transform .16s cubic-bezier(.22,1,.36,1),
-                box-shadow .18s, background .18s, color .18s, border-color .18s;
+    position: relative;
+    z-index: 3;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    border-radius: 999px;
+    --bw: 1px;
+    transition: all var(--anim-hover-time) var(--anim-hover-ease);
   }
-  button:active:not(:disabled) { transform: translateY(1px); }
-  button:disabled { opacity: .45; cursor: not-allowed; }
+  .button-wrap button:disabled { cursor: not-allowed; }
+  .button-wrap:has(button:disabled) { opacity: .45; }
+  .button-wrap:has(button:disabled) .button-shadow { opacity: .35; }
 
+  /* 玻璃主体：内外两组高光模拟玻璃厚度 */
   .btn-primary {
-    background: linear-gradient(180deg, var(--primary), var(--primary-600));
-    color: #fff;
-    box-shadow: 0 1px 2px rgba(61,87,232,.25), 0 6px 18px rgba(79,107,255,.26);
+    background: var(--glass-primary);
+    box-shadow:
+      inset 0 .125em .125em rgba(0, 0, 0, .30),
+      inset 0 -.125em .125em rgba(255, 255, 255, .24),
+      0 .25em .125em -.125em rgba(23, 26, 38, .35),
+      0 0 0 .18em inset rgba(255, 255, 255, .10);
+    backdrop-filter: blur(clamp(1px, .1em, 4px));
   }
-  .btn-primary:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(61,87,232,.28), 0 10px 26px rgba(79,107,255,.34);
+  .btn-ghost {
+    background: var(--glass-ghost);
+    box-shadow:
+      inset 0 .125em .125em rgba(23, 26, 38, .07),
+      inset 0 -.125em .125em rgba(255, 255, 255, .9),
+      0 .25em .125em -.125em rgba(23, 26, 38, .18),
+      0 0 0 .18em inset rgba(255, 255, 255, .55);
+    backdrop-filter: blur(clamp(1px, .1em, 4px));
+  }
+  .btn-primary:hover:not(:disabled),
+  .btn-ghost:hover:not(:disabled) {
+    transform: scale(.975);
+    backdrop-filter: blur(.4px);
   }
 
-  .btn-ghost {
-    background: var(--surface);
-    color: var(--text-2);
-    border-color: var(--border-strong);
-    box-shadow: var(--sh-1);
+  /* 文字层：同时作为扫光的定位参照 */
+  .button-wrap button span {
+    position: relative;
+    display: block;
+    user-select: none;
+    -webkit-user-select: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: -.005em;
+    padding-inline: 1.45em;
+    padding-block: .84em;
+    transition: all var(--anim-hover-time) var(--anim-hover-ease);
   }
-  .btn-ghost:hover:not(:disabled) {
-    transform: translateY(-1px);
-    color: var(--primary-600);
-    border-color: #C3CCF7;
-    box-shadow: var(--sh-2);
+  .btn-primary span {
+    color: var(--glass-primary-text);
+    text-shadow: 0 .22em .06em rgba(0, 0, 0, .35);
+  }
+  .btn-ghost span {
+    color: var(--text-1);
+    text-shadow: 0 .22em .05em rgba(23, 26, 38, .10);
+  }
+  .button-wrap button:hover:not(:disabled) span {
+    text-shadow: .02em .02em .02em rgba(0, 0, 0, .16);
+  }
+
+  /* 扫光：靠 background-position 与 --angle-2 联动形成斜向流光。
+     深色按钮用 screen（提亮），浅色按钮 screen 不可见，改 overlay。 */
+  .button-wrap button span::after {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: 3;
+    width: calc(100% - var(--bw));
+    height: calc(100% - var(--bw));
+    top: calc(var(--bw) / 2);
+    left: calc(var(--bw) / 2);
+    box-sizing: border-box;
+    border-radius: 999px;
+    overflow: clip;
+    background: linear-gradient(var(--angle-2),
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, .5) 40% 50%,
+      rgba(255, 255, 255, 0) 55%);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    background-repeat: no-repeat;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    transition:
+      background-position calc(var(--anim-hover-time) * 1.25)
+        var(--anim-hover-ease),
+      --angle-2 calc(var(--anim-hover-time) * 1.25) var(--anim-hover-ease);
+  }
+  .btn-ghost span::after { mix-blend-mode: overlay; }
+  .button-wrap button:hover:not(:disabled) span::after { background-position: 25% 50%; }
+  .button-wrap button:active:not(:disabled) span::after {
+    background-position: 50% 15%;
+    --angle-2: -15deg;
+  }
+
+  /* 描边：conic 渐变 + 双层 mask 挖出环形，角度由 --angle-1 驱动旋转 */
+  .button-wrap button::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: 999px;
+    width: calc(100% + var(--bw));
+    height: calc(100% + var(--bw));
+    top: calc(0% - var(--bw) / 2);
+    left: calc(0% - var(--bw) / 2);
+    padding: var(--bw);
+    box-sizing: border-box;
+    background:
+      conic-gradient(from var(--angle-1) at 50% 50%,
+        rgba(79, 107, 255, .95),
+        rgba(255, 255, 255, 0) 5% 40%,
+        rgba(139, 92, 246, .9) 50%,
+        rgba(255, 255, 255, 0) 60% 95%,
+        rgba(79, 107, 255, .95)),
+      linear-gradient(180deg,
+        rgba(255, 255, 255, .55), rgba(255, 255, 255, .55));
+    -webkit-mask: linear-gradient(#000 0 0) content-box,
+                  linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 calc(var(--bw) / 2) rgba(255, 255, 255, .3);
+    transition: all var(--anim-hover-time) var(--anim-hover-ease),
+                --angle-1 500ms ease;
+  }
+  .button-wrap button:hover:not(:disabled)::after { --angle-1: -125deg; }
+  .button-wrap button:active:not(:disabled)::after { --angle-1: -75deg; }
+
+  /* 按下时整体前倾 22 度，配合落影变化形成物理按压感 */
+  .button-wrap:has(button:hover:not(:disabled)) .button-shadow {
+    filter: blur(clamp(2px, .06em, 5px));
+  }
+  .button-wrap:has(button:active:not(:disabled)) {
+    transform: rotate3d(1, 0, 0, 22deg);
+  }
+  .button-wrap:has(button:active:not(:disabled)) .button-shadow {
+    filter: blur(clamp(2px, .1em, 10px));
+  }
+  .button-wrap:has(button:active:not(:disabled)) .button-shadow::after {
+    top: calc(var(--cut) - .42em);
+    opacity: .7;
   }
 
   /* ---------------- 动效 ---------------- */
@@ -210,8 +550,15 @@
     border-radius: var(--r-lg);
     background: linear-gradient(180deg, var(--success-soft), var(--surface) 78%);
     border: 1px solid var(--success-line);
-    box-shadow: var(--sh-2);
+    box-shadow: var(--sh-2),
+                0 18px 44px -20px rgba(15,157,88,.5);
   }
+  [data-theme="dark"] .result {
+    background: linear-gradient(180deg,
+                rgba(52,211,153,.10), var(--surface) 78%);
+    box-shadow: var(--sh-2), 0 18px 44px -18px rgba(52,211,153,.28);
+  }
+  [data-theme="dark"] .intent { color: #4ADE80; }
   .result.error {
     background: linear-gradient(180deg, var(--danger-soft), var(--surface) 78%);
     border-color: var(--danger-line);
@@ -298,7 +645,7 @@
     background: linear-gradient(90deg, var(--primary), var(--accent));
     box-shadow: 0 0 12px rgba(79,107,255,.35);
   }
-  .top3-item.is-first .bar-label { color: var(--text-1); font-weight: 500; }
+  .top3-item.is-first .bar-label { color: var(--text-1); font-weight: 600; }
   .bar-value {
     width: 58px;
     text-align: right;
@@ -333,7 +680,7 @@
   th, td { padding: 13px 20px; text-align: left; }
   th {
     font-size: 11.5px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-3);
     letter-spacing: .03em;
     background: var(--surface-soft);
@@ -346,30 +693,52 @@
 
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   td.num { font-family: var(--font-num); color: var(--text-1); }
-  td.model-name { color: var(--text-1); font-weight: 500; }
+  td.model-name { color: var(--text-1); font-weight: 600; }
 
-  /* 模型名做成文本样式的按钮：点击后在上方展开该模型的详细结果。
-     用 button 而非 span 是为了保留键盘 Tab 可达性与回车激活。 */
+  /* 表格里的模型名：点击后在上方展开该模型的详细结果。
+     视觉沿用玻璃按钮的语言——悬停浮现圆角玻璃底 + 描边 + 轻微抬升，
+     而不是廉价的虚线下划线。用 button 而非 span 是为了保留
+     键盘 Tab 可达性与回车激活。 */
   .model-link {
     font: inherit;
     color: inherit;
-    background: none;
-    border: none;
-    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 5px 12px;
+    /* 仅左侧负外边距：抵消左内边距，保证文字与表头左对齐。
+       右侧若也给负值，会把紧随其后的「最快」标签拽进胶囊里造成重叠。 */
+    margin: -5px 0 -5px -12px;
+    border-radius: 999px;
     cursor: pointer;
-    border-bottom: 1px dashed transparent;
-    transition: color .15s, border-color .15s;
+    position: relative;
+    transition: color .2s var(--anim-hover-ease),
+                background .2s var(--anim-hover-ease),
+                border-color .2s var(--anim-hover-ease),
+                box-shadow .2s var(--anim-hover-ease),
+                transform .2s var(--anim-hover-ease);
   }
-  .model-link:hover { color: var(--primary); border-bottom-color: var(--primary); }
+  .model-link:hover,
   .model-link:focus-visible {
     outline: none;
     color: var(--primary);
-    border-bottom-color: var(--primary);
+    transform: translateY(-1px);
+    border-color: var(--border-strong);
+    background: var(--glass-ghost);
+    box-shadow: var(--sh-1), inset 0 -1px 1px rgba(255, 255, 255, .45);
   }
+  .model-link:active { transform: translateY(1px); }
 
-  tr.best td { background: rgba(79,107,255,.055); }
-  tr.best td.model-name { color: var(--primary-600); }
+  /* 性能标记：整行暖色底 + 左侧金色细条 */
+  tr.best td { background: var(--best-row); }
+  tr.best td:first-child { box-shadow: inset 3px 0 0 #F2A33C; }
+  /* 交互状态：蓝色只留给它，避免与「最快」混淆 */
   tbody tr.is-active td { background: rgba(79,107,255,.10); }
+  tbody tr.is-active td:first-child { box-shadow: inset 3px 0 0 var(--primary); }
+  tr.is-active .model-link {
+    color: var(--primary);
+    background: var(--glass-ghost);
+    border-color: var(--border-strong);
+  }
 
   .tag {
     display: inline-block;
@@ -377,10 +746,21 @@
     padding: 2px 8px;
     border-radius: 999px;
     font-size: 11px;
-    font-weight: 500;
-    background: var(--primary);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(79,107,255,.35);
+    font-weight: 600;
+    background: var(--best-bg);
+    color: var(--best-text);
+    box-shadow: 0 2px 8px var(--best-glow),
+                inset 0 -1px 1px rgba(255, 255, 255, .55);
+  }
+  /* 当前选中行内，「最快」改用主色玻璃标签。
+     该行整体已是蓝色语言，旁边再放实心琥珀会两个颜色互抢，显得突兀。
+     文字仍是「最快」，信息没有丢失，只是强调色跟随当前状态。
+     非选中行保持琥珀金，两行依旧一眼可分。 */
+  tr.is-active .tag {
+    background: var(--primary-soft);
+    color: var(--primary-600);
+    box-shadow: inset 0 0 0 1px rgba(79, 107, 255, .45),
+                0 2px 6px rgba(79, 107, 255, .22);
   }
   .muted { color: var(--text-3); }
 
@@ -422,9 +802,33 @@
 </style>
 </head>
 <body>
+<!-- 点阵网格背景：纯 SVG pattern，不依赖外部资源 -->
+<svg class="bg-dots" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <pattern patternUnits="userSpaceOnUse" width="26" height="26" id="dotGrid">
+      <circle class="dot" r="1.1" cy="1.6" cx="1.6"></circle>
+    </pattern>
+  </defs>
+  <rect fill="url(#dotGrid)" width="100%" height="100%"></rect>
+</svg>
+
 <div class="shell">
 
   <header class="hero">
+    <button class="theme-toggle" id="themeToggle" type="button"
+            onclick="toggleTheme()" aria-label="切换深浅色主题">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/>
+      </svg>
+    </button>
     <div class="badge">BERT 意图分类 · 多模型对比</div>
     <h1>企业意图分类系统</h1>
     <p class="lede">
@@ -442,9 +846,18 @@
               oninput="refreshButtons()"></textarea>
 
     <div class="actions">
-      <button class="btn-primary" id="btnPredict" onclick="doPredict()">开始分类</button>
-      <button class="btn-ghost" id="btnCompare" onclick="doCompare()">对比全部模型</button>
-      <button class="btn-ghost" id="btnClear" onclick="clearAll()">清空</button>
+      <div class="button-wrap">
+        <button class="btn-primary" id="btnPredict" onclick="doPredict()"><span>开始分类</span></button>
+        <div class="button-shadow"></div>
+      </div>
+      <div class="button-wrap">
+        <button class="btn-ghost" id="btnCompare" onclick="doCompare()"><span>对比全部模型</span></button>
+        <div class="button-shadow"></div>
+      </div>
+      <div class="button-wrap">
+        <button class="btn-ghost" id="btnClear" onclick="clearAll()"><span>清空</span></button>
+        <div class="button-shadow"></div>
+      </div>
     </div>
   </section>
 
@@ -479,6 +892,30 @@ function cn(name) { return LABEL_CN[name] || name; }
 function esc(s) {
   return String(s).replace(/[&<>"']/g, function (ch) { return ESC_MAP[ch]; });
 }
+
+// 主题：首次访问跟随系统偏好，用户切换后写入 localStorage 记忆。
+const THEME_KEY = 'intent-demo-theme';
+
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  try { localStorage.setItem(THEME_KEY, t); } catch (e) { /* 隐私模式忽略 */ }
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+
+(function initTheme() {
+  let saved = null;
+  try { saved = localStorage.getItem(THEME_KEY); } catch (e) { /* 忽略 */ }
+  if (!saved) {
+    saved = (window.matchMedia &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+            ? 'dark' : 'light';
+  }
+  applyTheme(saved);
+})();
 
 let MODELS = [];
 let BUSY = false;
