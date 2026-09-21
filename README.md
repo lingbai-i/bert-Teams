@@ -100,7 +100,20 @@ python -m src.llm_baseline --sample 200         # 需先配置 .env
 python -m app.flask_app --port 5000     # 浏览器打开 http://localhost:5000
 ```
 
-## 五、数据说明
+## 五、模型产物规范（重要：避免"每人一个模型"的混乱）
+
+| 模型产物 | 地位 | 说明 |
+|------|------|------|
+| 全量 `checkpoints/intent_bert/best.pt` | **唯一权威模型** | 组长机器全量训练（seed=42），答辩、压缩、部署全部以它为准 |
+| 组员 mini 训练的 best.pt | 练手产物，不交付 | 只为跑通流程，精度无意义，**不要**用于任何正式环节 |
+| `intent_bert_int8/best_int8.pt` | 从权威模型派生 | 量化组基于权威 best.pt 生成 |
+| `intent_bilstm_distill/best.pt` | 从权威模型派生 | 蒸馏组以权威 best.pt 为教师 |
+| `intent_bert_pruned/best.pt` | 从权威模型派生 | 剪枝组基于权威 best.pt 生成 |
+| `rf/rf.pkl`、`fasttext/ft.bin` | 各自独立训练 | 基线路线，metrics.json 里写清训练配置即可 |
+
+**产物共享方式**：模型不入库（.gitignore 已排除）。压缩、部署联调明早统一在组长机器上进行（该机器已有 `models/` 和权威 best.pt）；其他成员如需模型文件，由组长通过网盘/即时通讯发送 best.pt。
+
+## 六、数据说明
 
 - `data/train.txt` 202,500 条 / `test.txt`、`dev.txt` 各 11,250 条，格式 `文本\t标签ID`
 - `data/class.txt` 9 个意图标签（8 业务 + 其他闲聊），行号即标签 ID
