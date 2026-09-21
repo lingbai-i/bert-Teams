@@ -1,0 +1,83 @@
+{
+  "version": "2026-09-21",
+  "note": "合成语料重分类规则表。分类依据 = data/knowledge_base 各部门文档（每个部门目录一一对应 class.txt 的一个类别）+ data/class.txt。kind=conflict 表示同一主题字符串被两个类别重复标注（矛盾标注，必修）；kind=concept_merge 表示同一业务概念被生成器拆成两个主题词（非矛盾标注，归并后可减少类别间的语义串扰）。每条规则给出 evidence（知识库原文出处）与 before（清洗前在 train.txt 中的标签分布），便于复核与回滚。",
+  "rules": [
+    {
+      "phrase": "病假工资",
+      "label": "policy_attendance",
+      "kind": "conflict",
+      "evidence": "knowledge_base/policy/attendance.md：2.2 病假 —— 病假工资按基本工资的 80% 发放",
+      "before": "hr_onboarding:328, policy_attendance:314"
+    },
+    {
+      "phrase": "育儿假",
+      "label": "policy_attendance",
+      "kind": "conflict",
+      "evidence": "knowledge_base/policy/attendance.md：2.4 其他假期 —— 育儿假：子女 3 岁前夫妻双方每年各 5 天",
+      "before": "hr_onboarding:328, policy_attendance:325"
+    },
+    {
+      "phrase": "陪产假",
+      "label": "policy_attendance",
+      "kind": "conflict",
+      "evidence": "knowledge_base/policy/attendance.md：2.4 其他假期 —— 陪产假：15 天",
+      "before": "hr_onboarding:339, policy_attendance:322"
+    },
+    {
+      "phrase": "加班费计算",
+      "label": "policy_attendance",
+      "kind": "conflict",
+      "evidence": "knowledge_base/policy/overtime.md：章节标题《加班费计算》",
+      "before": "policy_attendance:328, finance_expense:326"
+    },
+    {
+      "phrase": "保密协议",
+      "label": "legal_contract",
+      "kind": "conflict",
+      "evidence": "knowledge_base/legal/confidential.md：章节标题《保密协议》",
+      "before": "legal_contract:319, hr_onboarding:313"
+    },
+    {
+      "phrase": "竞业协议",
+      "label": "legal_contract",
+      "kind": "conflict",
+      "evidence": "knowledge_base/legal/confidential.md：章节标题《竞业限制》",
+      "before": "legal_contract:329, hr_onboarding:303"
+    },
+    {
+      "phrase": "合同模板",
+      "label": "legal_contract",
+      "kind": "conflict",
+      "evidence": "knowledge_base/legal/contract.md：1.2 模板 —— 常用模板见 OA“法务模板库”",
+      "before": "sales_marketing:324, legal_contract:309"
+    },
+    {
+      "phrase": "盖章",
+      "label": "legal_contract",
+      "kind": "conflict",
+      "evidence": "knowledge_base/legal/contract.md：第二章 用章管理 —— 《用章申请》→ 部门审批 → 法务审核 → 到行政部盖章",
+      "before": "legal_contract:346, admin_logistics:331"
+    },
+    {
+      "phrase": "劳动仲裁",
+      "label": "hr_onboarding",
+      "kind": "conflict",
+      "evidence": "知识库未收录该主题。按裁定口径：离职劳动争议归人事（hr/onboarding.md 第二章转正与离职），合同争议的仲裁条款归法务（legal/contract.md 第四章争议处理），故“劳动仲裁”判给 hr_onboarding，“仲裁申请”仍留 legal_contract",
+      "before": "hr_onboarding:386, legal_contract:~317"
+    },
+    {
+      "phrase": "产假工资",
+      "label": "policy_attendance",
+      "kind": "concept_merge",
+      "evidence": "knowledge_base/policy/attendance.md：2.4 其他假期（产假/陪产假/婚假/丧假）与 2.2 病假工资同属请假制度章节，假期待遇统一归 policy_attendance",
+      "before": "hr_onboarding:391"
+    },
+    {
+      "phrase": "年假计算",
+      "label": "policy_attendance",
+      "kind": "concept_merge",
+      "evidence": "knowledge_base/policy/attendance.md：2.1 年假 —— 入职满 1 年享 5 天年假；其余年假主题（年假天数/年假折算/离职年假/年假有效期）均已是 policy_attendance，此处统一",
+      "before": "hr_onboarding:327"
+    }
+  ]
+}
