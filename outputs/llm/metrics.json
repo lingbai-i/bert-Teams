@@ -1,0 +1,4848 @@
+{
+  "task": "intent-recognition-llm-baseline",
+  "model": "deepseek-chat",
+  "sample_size": 200,
+  "seed": 42,
+  "generated_at": "2026-09-21 11:36:13",
+  "versions": {
+    "v1": {
+      "label": "基础版（零样本）",
+      "sample_size": 200,
+      "accuracy": 0.78,
+      "avg_latency_ms": 897.0,
+      "error_count": 0,
+      "results": [
+        {
+          "query": "那个客户档案费用",
+          "expected": "sales_marketing",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 880.3,
+          "raw_output": "2"
+        },
+        {
+          "query": "哎投标保证金怎么办理",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 844.8,
+          "raw_output": "7"
+        },
+        {
+          "query": "年休假安排费用？",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 714.2,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了请问一下陪产假",
+          "expected": "hr_onboarding",
+          "predicted": "policy_attendance",
+          "correct": false,
+          "latency_ms": 873.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "麻烦问下急停按钮辛苦",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 758.7,
+          "raw_output": "5"
+        },
+        {
+          "query": "公司培训费报销谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 855.2,
+          "raw_output": "2"
+        },
+        {
+          "query": "我想问下标准工时？",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 722.4,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了咨询个事授权许可?",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 876.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "社保扣款怎么弄麻烦了",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 780.2,
+          "raw_output": "2"
+        },
+        {
+          "query": "网络打印机审批辛苦",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 767.3,
+          "raw_output": "1"
+        },
+        {
+          "query": "你好打卡时间规定",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 958.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "咨询下电子签章辛苦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 998.3,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗仲裁申请规定",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 760.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "请问一下哺乳时间",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 808.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "系统重装麻烦说下",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 908.8,
+          "raw_output": "1"
+        },
+        {
+          "query": "帮我今天天气怎么样麻烦了",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 558.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "快递柜怎么申请哈",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 957.1,
+          "raw_output": "4"
+        },
+        {
+          "query": "你好NPS在哪~",
+          "expected": "sales_marketing",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 847.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了请教一下年假怎么休",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1072.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "盖章流程怎么操作辛苦",
+          "expected": "admin_logistics",
+          "predicted": "legal_contract",
+          "correct": false,
+          "latency_ms": 669.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗格式条款的规则",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 827.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "请问一下8D报告？",
+          "expected": "engineering_eq",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1048.9,
+          "raw_output": "8"
+        },
+        {
+          "query": "你好合同盖章怎么操作",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 919.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "请教一下招投标谢谢啦",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 706.0,
+          "raw_output": "7"
+        },
+        {
+          "query": "自行车停放是什么麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 691.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗公司社保转移谢谢",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 761.8,
+          "raw_output": "2"
+        },
+        {
+          "query": "宿舍设施怎么申请麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 623.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "哎工会福利谢谢辛苦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 614.9,
+          "raw_output": "8"
+        },
+        {
+          "query": "关于公司VPN辛苦",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 997.1,
+          "raw_output": "1"
+        },
+        {
+          "query": "你好公司医务室",
+          "expected": "admin_logistics",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 681.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "回款跟进时间辛苦",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 1015.5,
+          "raw_output": "7"
+        },
+        {
+          "query": "请问想知道电机过载~",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 867.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "考勤申诉哈",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 773.3,
+          "raw_output": "0"
+        },
+        {
+          "query": "账期管理怎么办理辛苦",
+          "expected": "sales_marketing",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 894.5,
+          "raw_output": "2"
+        },
+        {
+          "query": "班车投诉谢谢辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 918.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "模具保养在哪？",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 920.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "产线故障的规则？",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 999.2,
+          "raw_output": "5"
+        },
+        {
+          "query": "失业金麻烦说下谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 821.3,
+          "raw_output": "2"
+        },
+        {
+          "query": "请问会议室冲突怎么申请辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 755.4,
+          "raw_output": "4"
+        },
+        {
+          "query": "想问下员工申诉谢谢",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 806.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "想了解下职级体系?",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 707.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "饮用水标准",
+          "expected": "admin_logistics",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 586.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗数据备份",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 866.2,
+          "raw_output": "1"
+        },
+        {
+          "query": "医保报销怎么办麻烦了",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 1376.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "公司光栅保护",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 871.8,
+          "raw_output": "5"
+        },
+        {
+          "query": "哎想知道市场调研",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 1084.4,
+          "raw_output": "7"
+        },
+        {
+          "query": "咱们法律顾问",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 834.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "打扰了你会唱歌吗，你说呢？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1158.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "合同盖章在哪哈",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 727.0,
+          "raw_output": "6"
+        },
+        {
+          "query": "想了解下日历共享麻烦了",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 1030.5,
+          "raw_output": "1"
+        },
+        {
+          "query": "在吗想问下合同台账",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 1044.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗离职年假审批",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 655.0,
+          "raw_output": "0"
+        },
+        {
+          "query": "请问键盘失灵标准？",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 547.5,
+          "raw_output": "1"
+        },
+        {
+          "query": "问个事合同盖章~",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 778.3,
+          "raw_output": "6"
+        },
+        {
+          "query": "打扰了关于不可抗力?",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 870.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗事假扣薪流程",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 947.4,
+          "raw_output": "0"
+        },
+        {
+          "query": "哎请问入职材料",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 714.4,
+          "raw_output": "3"
+        },
+        {
+          "query": "哎你说中午吃什么谢谢啦",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1155.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "你好全勤奖需要什么材料",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 928.5,
+          "raw_output": "0"
+        },
+        {
+          "query": "补卡规则费用辛苦",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 668.4,
+          "raw_output": "0"
+        },
+        {
+          "query": "照明报修怎么申请谢谢啦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 749.1,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗关于内推奖励谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 866.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "试单怎么办麻烦了",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 596.7,
+          "raw_output": "7"
+        },
+        {
+          "query": "那个咱们节假日加班",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1062.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "我想说个故事？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 729.1,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗鼓励一下我呀谢谢啦",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1116.9,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎人脸识别怎么办？",
+          "expected": "policy_attendance",
+          "predicted": "it_vpn",
+          "correct": false,
+          "latency_ms": 772.7,
+          "raw_output": "1"
+        },
+        {
+          "query": "宿舍申请怎么办理麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 902.1,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗备件库存条件",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 696.5,
+          "raw_output": "5"
+        },
+        {
+          "query": "在吗机票预订",
+          "expected": "finance_expense",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 694.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "请问咨询下应收账款？",
+          "expected": "sales_marketing",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 640.5,
+          "raw_output": "2"
+        },
+        {
+          "query": "咱特殊价格",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 648.5,
+          "raw_output": "7"
+        },
+        {
+          "query": "技改项目麻烦说下?",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 988.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问想了解下竞业协议谢谢啦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 800.8,
+          "raw_output": "6"
+        },
+        {
+          "query": "你好麻烦问下人脸识别谢谢",
+          "expected": "policy_attendance",
+          "predicted": "it_vpn",
+          "correct": false,
+          "latency_ms": 837.5,
+          "raw_output": "1"
+        },
+        {
+          "query": "咱们登录失败哈",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 718.8,
+          "raw_output": "1"
+        },
+        {
+          "query": "那个入职材料要多久",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 458.8,
+          "raw_output": "3"
+        },
+        {
+          "query": "标书制作的规则？",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 707.5,
+          "raw_output": "7"
+        },
+        {
+          "query": "你好综合工时要多久辛苦",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 909.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "哎，你是机器人吗?",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 742.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗公司试用期考核",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 793.5,
+          "raw_output": "3"
+        },
+        {
+          "query": "你好问个事竞业协议",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 459.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗夜间津贴要多久",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 707.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了VPN连接怎么申请",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 668.7,
+          "raw_output": "1"
+        },
+        {
+          "query": "想问下停车位辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 822.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "那个预算申请标准",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 671.3,
+          "raw_output": "2"
+        },
+        {
+          "query": "打扰了公司合同台账",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 937.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗设备点检需要什么材料",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 1016.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "我想你怕黑吗辛苦",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 740.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "那个备件周期的规则",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 797.8,
+          "raw_output": "5"
+        },
+        {
+          "query": "哎招投标时间",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 1057.6,
+          "raw_output": "7"
+        },
+        {
+          "query": "关于发票真伪辛苦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 796.9,
+          "raw_output": "2"
+        },
+        {
+          "query": "请问我想问下备件库存",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 748.3,
+          "raw_output": "5"
+        },
+        {
+          "query": "想问下设备维修麻烦了",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 620.2,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问给我你是机器人吗",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1545.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "团建活动是什么?",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 856.7,
+          "raw_output": "8"
+        },
+        {
+          "query": "陪产假需要什么材料?",
+          "expected": "hr_onboarding",
+          "predicted": "policy_attendance",
+          "correct": false,
+          "latency_ms": 785.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "在吗传感器故障费用",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 689.4,
+          "raw_output": "5"
+        },
+        {
+          "query": "落户政策费用谢谢",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1027.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了你说你喜欢什么颜色",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 870.5,
+          "raw_output": "8"
+        },
+        {
+          "query": "律师函麻烦说下麻烦了",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 650.6,
+          "raw_output": "6"
+        },
+        {
+          "query": "晚上好啊谢谢",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 542.1,
+          "raw_output": "8"
+        },
+        {
+          "query": "我想谢谢你谢谢",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 988.1,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了银行账户怎么申请麻烦了",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 965.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "我想你叫什么名字？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1046.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "电机过载流程谢谢",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 978.8,
+          "raw_output": "5"
+        },
+        {
+          "query": "问个事员工手册辛苦",
+          "expected": "hr_onboarding",
+          "predicted": "policy_attendance",
+          "correct": false,
+          "latency_ms": 753.5,
+          "raw_output": "0"
+        },
+        {
+          "query": "关于5S管理?",
+          "expected": "engineering_eq",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 729.1,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎访客登记规定",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1103.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "那个咱们出差补助",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 757.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个好奇你累不累哈",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1047.5,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗你说你有朋友吗~",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1208.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎关于健身房使用",
+          "expected": "admin_logistics",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 784.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了我想问下标书制作",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 807.7,
+          "raw_output": "7"
+        },
+        {
+          "query": "邮箱容量怎么操作",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 778.2,
+          "raw_output": "1"
+        },
+        {
+          "query": "你好排产要多久谢谢啦",
+          "expected": "sales_marketing",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 876.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "咨询下储物柜麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 780.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "饭卡补办时间谢谢",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 708.4,
+          "raw_output": "4"
+        },
+        {
+          "query": "医保报销怎么申请？",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 946.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "区域划分审批?",
+          "expected": "sales_marketing",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1128.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗麻烦问下会议室设备",
+          "expected": "admin_logistics",
+          "predicted": "engineering_eq",
+          "correct": false,
+          "latency_ms": 615.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "离职流程要求？",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 928.6,
+          "raw_output": "3"
+        },
+        {
+          "query": "哎麻烦问下设备报修~",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 1335.6,
+          "raw_output": "5"
+        },
+        {
+          "query": "人才推荐怎么弄？",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1120.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "请问会议预订流程",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1036.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "打扰了丧假标准？",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1406.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "想了解下故障代码哈",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 1423.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "卫生保洁的规则辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 672.5,
+          "raw_output": "4"
+        },
+        {
+          "query": "那个咨询个事补贴发放",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 837.5,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个离职证明是什么",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 1241.4,
+          "raw_output": "3"
+        },
+        {
+          "query": "你好卫生保洁怎么申请",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 803.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "请问个人信息保护标准",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 1115.3,
+          "raw_output": "6"
+        },
+        {
+          "query": "那个咨询个事工伤假",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1156.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "你好财务系统辛苦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 1631.6,
+          "raw_output": "2"
+        },
+        {
+          "query": "你好MTBF如何办理",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 962.7,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问咱宣传册谢谢",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 1113.7,
+          "raw_output": "7"
+        },
+        {
+          "query": "在吗上下班时间在哪",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 687.9,
+          "raw_output": "0"
+        },
+        {
+          "query": "会议室冲突的规则麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1020.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "产品培训怎么操作?",
+          "expected": "sales_marketing",
+          "predicted": "hr_onboarding",
+          "correct": false,
+          "latency_ms": 1116.7,
+          "raw_output": "3"
+        },
+        {
+          "query": "那个维修工单怎么申请",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 892.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "你好打卡补录麻烦说下",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1229.4,
+          "raw_output": "0"
+        },
+        {
+          "query": "请问想知道公章使用",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 1249.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "哎迟到罚款标准",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 578.5,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了想知道带宽不够",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 893.4,
+          "raw_output": "1"
+        },
+        {
+          "query": "哎，你怕黑吗谢谢",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 769.2,
+          "raw_output": "8"
+        },
+        {
+          "query": "加班时长上限怎么申请~",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 869.0,
+          "raw_output": "0"
+        },
+        {
+          "query": "班车投诉怎么申请哈",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 967.9,
+          "raw_output": "4"
+        },
+        {
+          "query": "哎员工申诉在哪辛苦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 2052.1,
+          "raw_output": "8"
+        },
+        {
+          "query": "咨询个事食堂就餐麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 873.5,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗费用控制的规则",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 784.9,
+          "raw_output": "2"
+        },
+        {
+          "query": "食堂充值是什么辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 979.4,
+          "raw_output": "4"
+        },
+        {
+          "query": "咨询个事网页打不开麻烦了",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 1172.9,
+          "raw_output": "1"
+        },
+        {
+          "query": "请问360评估麻烦了",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 994.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗想知道VPN证书麻烦了",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 782.8,
+          "raw_output": "1"
+        },
+        {
+          "query": "好奇人生的意义",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1051.2,
+          "raw_output": "8"
+        },
+        {
+          "query": "样品申请如何办理",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 901.1,
+          "raw_output": "7"
+        },
+        {
+          "query": "哎格式条款",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 1005.4,
+          "raw_output": "6"
+        },
+        {
+          "query": "打扰了今天心情不错?",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 659.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "请问电动车充电标准",
+          "expected": "admin_logistics",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1002.1,
+          "raw_output": "8"
+        },
+        {
+          "query": "CRM录入的政策",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 794.6,
+          "raw_output": "7"
+        },
+        {
+          "query": "请问落户政策怎么操作谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 845.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "你好请问保密期限",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 1280.5,
+          "raw_output": "6"
+        },
+        {
+          "query": "哎公司档案转移",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1149.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "差旅政策的规则谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 857.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个社保转移怎么办理",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 1086.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个退休办理麻烦说下谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1051.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了麻烦问下带宽不够",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 953.0,
+          "raw_output": "1"
+        },
+        {
+          "query": "授权许可审批哈",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 808.4,
+          "raw_output": "6"
+        },
+        {
+          "query": "试用期多久怎么操作？",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 802.9,
+          "raw_output": "3"
+        },
+        {
+          "query": "竞业协议怎么弄谢谢啦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 776.1,
+          "raw_output": "6"
+        },
+        {
+          "query": "员工活动的规则~",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1102.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "弹性工作制需要什么材料谢谢",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1030.2,
+          "raw_output": "0"
+        },
+        {
+          "query": "住房补贴怎么申请~",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 640.6,
+          "raw_output": "2"
+        },
+        {
+          "query": "咨询个事税务报销哈",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 1004.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "哎，说个故事?",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 783.5,
+          "raw_output": "8"
+        },
+        {
+          "query": "那个工伤假规定",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1663.9,
+          "raw_output": "0"
+        },
+        {
+          "query": "哎内推奖励时间谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1043.7,
+          "raw_output": "8"
+        },
+        {
+          "query": "班车取消谢谢啦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1156.8,
+          "raw_output": "4"
+        },
+        {
+          "query": "请问咨询下设备报修麻烦了",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 904.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "社保转移的规则~",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 1308.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "请问咱新客户开发辛苦",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 500.4,
+          "raw_output": "7"
+        },
+        {
+          "query": "你好几点下班谢谢啦",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1007.9,
+          "raw_output": "0"
+        },
+        {
+          "query": "那个PLC报警标准",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 1025.2,
+          "raw_output": "5"
+        },
+        {
+          "query": "报销逾期标准",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 783.8,
+          "raw_output": "2"
+        },
+        {
+          "query": "哎关于电子签章谢谢啦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 727.6,
+          "raw_output": "6"
+        },
+        {
+          "query": "请问病假工资流程",
+          "expected": "policy_attendance",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 516.5,
+          "raw_output": "2"
+        },
+        {
+          "query": "进项抵扣是什么谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 835.9,
+          "raw_output": "2"
+        },
+        {
+          "query": "打扰了诉讼流程费用",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 896.3,
+          "raw_output": "6"
+        },
+        {
+          "query": "关于会议预订?",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1528.5,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗绩效工资的规则",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 962.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个急停按钮需要什么材料",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 1223.3,
+          "raw_output": "5"
+        },
+        {
+          "query": "那个咱们快递收发",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 846.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "你好酒店预订规定谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 715.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "我失眠了呀？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 754.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎变频器报警是什么",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 956.2,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问关于采购合同",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 1147.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "系统权限麻烦说下谢谢",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 703.5,
+          "raw_output": "1"
+        },
+        {
+          "query": "在吗请问客户档案？",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 801.6,
+          "raw_output": "7"
+        },
+        {
+          "query": "哎想问下故障记录辛苦",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 946.3,
+          "raw_output": "5"
+        },
+        {
+          "query": "网络故障在哪?",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 899.4,
+          "raw_output": "1"
+        }
+      ]
+    },
+    "v2": {
+      "label": "优化版（易混淆规则）",
+      "sample_size": 200,
+      "accuracy": 0.805,
+      "avg_latency_ms": 807.4,
+      "error_count": 0,
+      "results": [
+        {
+          "query": "那个客户档案费用",
+          "expected": "sales_marketing",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 700.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "哎投标保证金怎么办理",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 882.9,
+          "raw_output": "7"
+        },
+        {
+          "query": "年休假安排费用？",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 717.2,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了请问一下陪产假",
+          "expected": "hr_onboarding",
+          "predicted": "policy_attendance",
+          "correct": false,
+          "latency_ms": 690.2,
+          "raw_output": "0"
+        },
+        {
+          "query": "麻烦问下急停按钮辛苦",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 824.3,
+          "raw_output": "5"
+        },
+        {
+          "query": "公司培训费报销谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 949.3,
+          "raw_output": "2"
+        },
+        {
+          "query": "我想问下标准工时？",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1048.4,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了咨询个事授权许可?",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 837.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "社保扣款怎么弄麻烦了",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 830.6,
+          "raw_output": "2"
+        },
+        {
+          "query": "网络打印机审批辛苦",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 628.2,
+          "raw_output": "1"
+        },
+        {
+          "query": "你好打卡时间规定",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 948.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "咨询下电子签章辛苦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 867.3,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗仲裁申请规定",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 771.3,
+          "raw_output": "6"
+        },
+        {
+          "query": "请问一下哺乳时间",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1071.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "系统重装麻烦说下",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 861.7,
+          "raw_output": "1"
+        },
+        {
+          "query": "帮我今天天气怎么样麻烦了",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 897.9,
+          "raw_output": "8"
+        },
+        {
+          "query": "快递柜怎么申请哈",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 651.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "你好NPS在哪~",
+          "expected": "sales_marketing",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 775.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了请教一下年假怎么休",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 706.2,
+          "raw_output": "0"
+        },
+        {
+          "query": "盖章流程怎么操作辛苦",
+          "expected": "admin_logistics",
+          "predicted": "legal_contract",
+          "correct": false,
+          "latency_ms": 996.4,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗格式条款的规则",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 492.3,
+          "raw_output": "6"
+        },
+        {
+          "query": "请问一下8D报告？",
+          "expected": "engineering_eq",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 687.1,
+          "raw_output": "8"
+        },
+        {
+          "query": "你好合同盖章怎么操作",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 981.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "请教一下招投标谢谢啦",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 456.3,
+          "raw_output": "7"
+        },
+        {
+          "query": "自行车停放是什么麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1012.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗公司社保转移谢谢",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 702.4,
+          "raw_output": "2"
+        },
+        {
+          "query": "宿舍设施怎么申请麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 652.5,
+          "raw_output": "4"
+        },
+        {
+          "query": "哎工会福利谢谢辛苦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1208.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "关于公司VPN辛苦",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 1017.7,
+          "raw_output": "1"
+        },
+        {
+          "query": "你好公司医务室",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 990.0,
+          "raw_output": "4"
+        },
+        {
+          "query": "回款跟进时间辛苦",
+          "expected": "sales_marketing",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 619.7,
+          "raw_output": "2"
+        },
+        {
+          "query": "请问想知道电机过载~",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 699.0,
+          "raw_output": "5"
+        },
+        {
+          "query": "考勤申诉哈",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 905.1,
+          "raw_output": "0"
+        },
+        {
+          "query": "账期管理怎么办理辛苦",
+          "expected": "sales_marketing",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 850.3,
+          "raw_output": "2"
+        },
+        {
+          "query": "班车投诉谢谢辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1016.8,
+          "raw_output": "4"
+        },
+        {
+          "query": "模具保养在哪？",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 878.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "产线故障的规则？",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 1217.4,
+          "raw_output": "5"
+        },
+        {
+          "query": "失业金麻烦说下谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 919.3,
+          "raw_output": "2"
+        },
+        {
+          "query": "请问会议室冲突怎么申请辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 632.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "想问下员工申诉谢谢",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 617.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "想了解下职级体系?",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 943.2,
+          "raw_output": "8"
+        },
+        {
+          "query": "饮用水标准",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 674.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗数据备份",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 478.1,
+          "raw_output": "1"
+        },
+        {
+          "query": "医保报销怎么办麻烦了",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 895.8,
+          "raw_output": "2"
+        },
+        {
+          "query": "公司光栅保护",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 880.4,
+          "raw_output": "5"
+        },
+        {
+          "query": "哎想知道市场调研",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 705.8,
+          "raw_output": "7"
+        },
+        {
+          "query": "咱们法律顾问",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 851.1,
+          "raw_output": "6"
+        },
+        {
+          "query": "打扰了你会唱歌吗，你说呢？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1236.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "合同盖章在哪哈",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 751.4,
+          "raw_output": "6"
+        },
+        {
+          "query": "想了解下日历共享麻烦了",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 778.4,
+          "raw_output": "1"
+        },
+        {
+          "query": "在吗想问下合同台账",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 977.8,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗离职年假审批",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 620.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "请问键盘失灵标准？",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 578.0,
+          "raw_output": "1"
+        },
+        {
+          "query": "问个事合同盖章~",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 778.5,
+          "raw_output": "6"
+        },
+        {
+          "query": "打扰了关于不可抗力?",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 717.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗事假扣薪流程",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 644.4,
+          "raw_output": "0"
+        },
+        {
+          "query": "哎请问入职材料",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 775.6,
+          "raw_output": "3"
+        },
+        {
+          "query": "哎你说中午吃什么谢谢啦",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1093.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "你好全勤奖需要什么材料",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 858.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "补卡规则费用辛苦",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 946.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "照明报修怎么申请谢谢啦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 709.8,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗关于内推奖励谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 477.2,
+          "raw_output": "8"
+        },
+        {
+          "query": "试单怎么办麻烦了",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 896.6,
+          "raw_output": "7"
+        },
+        {
+          "query": "那个咱们节假日加班",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 677.0,
+          "raw_output": "0"
+        },
+        {
+          "query": "我想说个故事？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 687.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗鼓励一下我呀谢谢啦",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 662.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎人脸识别怎么办？",
+          "expected": "policy_attendance",
+          "predicted": "it_vpn",
+          "correct": false,
+          "latency_ms": 733.3,
+          "raw_output": "1"
+        },
+        {
+          "query": "宿舍申请怎么办理麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 548.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗备件库存条件",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 798.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "在吗机票预订",
+          "expected": "finance_expense",
+          "predicted": "admin_logistics",
+          "correct": false,
+          "latency_ms": 737.1,
+          "raw_output": "4"
+        },
+        {
+          "query": "请问咨询下应收账款？",
+          "expected": "sales_marketing",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 848.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "咱特殊价格",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 730.6,
+          "raw_output": "7"
+        },
+        {
+          "query": "技改项目麻烦说下?",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 698.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问想了解下竞业协议谢谢啦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 818.1,
+          "raw_output": "6"
+        },
+        {
+          "query": "你好麻烦问下人脸识别谢谢",
+          "expected": "policy_attendance",
+          "predicted": "it_vpn",
+          "correct": false,
+          "latency_ms": 639.5,
+          "raw_output": "1"
+        },
+        {
+          "query": "咱们登录失败哈",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 862.3,
+          "raw_output": "1"
+        },
+        {
+          "query": "那个入职材料要多久",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 875.3,
+          "raw_output": "3"
+        },
+        {
+          "query": "标书制作的规则？",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 554.8,
+          "raw_output": "7"
+        },
+        {
+          "query": "你好综合工时要多久辛苦",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 725.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "哎，你是机器人吗?",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 818.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗公司试用期考核",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 1099.0,
+          "raw_output": "3"
+        },
+        {
+          "query": "你好问个事竞业协议",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 1001.6,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗夜间津贴要多久",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 769.1,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了VPN连接怎么申请",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 1559.1,
+          "raw_output": "1"
+        },
+        {
+          "query": "想问下停车位辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 596.8,
+          "raw_output": "4"
+        },
+        {
+          "query": "那个预算申请标准",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 539.3,
+          "raw_output": "2"
+        },
+        {
+          "query": "打扰了公司合同台账",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 674.6,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗设备点检需要什么材料",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 601.2,
+          "raw_output": "5"
+        },
+        {
+          "query": "我想你怕黑吗辛苦",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 717.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "那个备件周期的规则",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 655.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "哎招投标时间",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 759.1,
+          "raw_output": "7"
+        },
+        {
+          "query": "关于发票真伪辛苦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 676.8,
+          "raw_output": "2"
+        },
+        {
+          "query": "请问我想问下备件库存",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 834.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "想问下设备维修麻烦了",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 651.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问给我你是机器人吗",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 761.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "团建活动是什么?",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1209.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "陪产假需要什么材料?",
+          "expected": "hr_onboarding",
+          "predicted": "policy_attendance",
+          "correct": false,
+          "latency_ms": 879.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "在吗传感器故障费用",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 672.6,
+          "raw_output": "5"
+        },
+        {
+          "query": "落户政策费用谢谢",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 739.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了你说你喜欢什么颜色",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 639.7,
+          "raw_output": "8"
+        },
+        {
+          "query": "律师函麻烦说下麻烦了",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 962.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "晚上好啊谢谢",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 821.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "我想谢谢你谢谢",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 876.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了银行账户怎么申请麻烦了",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 945.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "我想你叫什么名字？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 746.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "电机过载流程谢谢",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 1092.2,
+          "raw_output": "5"
+        },
+        {
+          "query": "问个事员工手册辛苦",
+          "expected": "hr_onboarding",
+          "predicted": "policy_attendance",
+          "correct": false,
+          "latency_ms": 898.5,
+          "raw_output": "0"
+        },
+        {
+          "query": "关于5S管理?",
+          "expected": "engineering_eq",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 568.9,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎访客登记规定",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 648.8,
+          "raw_output": "4"
+        },
+        {
+          "query": "那个咱们出差补助",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 694.5,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个好奇你累不累哈",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 637.2,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗你说你有朋友吗~",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 756.2,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎关于健身房使用",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 718.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "打扰了我想问下标书制作",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 820.8,
+          "raw_output": "7"
+        },
+        {
+          "query": "邮箱容量怎么操作",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 738.4,
+          "raw_output": "1"
+        },
+        {
+          "query": "你好排产要多久谢谢啦",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 915.2,
+          "raw_output": "7"
+        },
+        {
+          "query": "咨询下储物柜麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 812.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "饭卡补办时间谢谢",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1111.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "医保报销怎么申请？",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 1149.4,
+          "raw_output": "2"
+        },
+        {
+          "query": "区域划分审批?",
+          "expected": "sales_marketing",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 880.5,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗麻烦问下会议室设备",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 565.8,
+          "raw_output": "4"
+        },
+        {
+          "query": "离职流程要求？",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 1008.5,
+          "raw_output": "3"
+        },
+        {
+          "query": "哎麻烦问下设备报修~",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 638.5,
+          "raw_output": "5"
+        },
+        {
+          "query": "人才推荐怎么弄？",
+          "expected": "hr_onboarding",
+          "predicted": "sales_marketing",
+          "correct": false,
+          "latency_ms": 620.8,
+          "raw_output": "7"
+        },
+        {
+          "query": "请问会议预订流程",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1070.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "打扰了丧假标准？",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 796.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "想了解下故障代码哈",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 779.8,
+          "raw_output": "5"
+        },
+        {
+          "query": "卫生保洁的规则辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 787.0,
+          "raw_output": "4"
+        },
+        {
+          "query": "那个咨询个事补贴发放",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 744.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个离职证明是什么",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 984.2,
+          "raw_output": "3"
+        },
+        {
+          "query": "你好卫生保洁怎么申请",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 945.9,
+          "raw_output": "4"
+        },
+        {
+          "query": "请问个人信息保护标准",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 799.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "那个咨询个事工伤假",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 577.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "你好财务系统辛苦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 760.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "你好MTBF如何办理",
+          "expected": "engineering_eq",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 596.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "请问咱宣传册谢谢",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 539.8,
+          "raw_output": "7"
+        },
+        {
+          "query": "在吗上下班时间在哪",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 879.2,
+          "raw_output": "0"
+        },
+        {
+          "query": "会议室冲突的规则麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 779.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "产品培训怎么操作?",
+          "expected": "sales_marketing",
+          "predicted": "hr_onboarding",
+          "correct": false,
+          "latency_ms": 813.7,
+          "raw_output": "3"
+        },
+        {
+          "query": "那个维修工单怎么申请",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 887.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "你好打卡补录麻烦说下",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 631.2,
+          "raw_output": "0"
+        },
+        {
+          "query": "请问想知道公章使用",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 612.1,
+          "raw_output": "6"
+        },
+        {
+          "query": "哎迟到罚款标准",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 770.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了想知道带宽不够",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 667.8,
+          "raw_output": "1"
+        },
+        {
+          "query": "哎，你怕黑吗谢谢",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 684.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "加班时长上限怎么申请~",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 532.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "班车投诉怎么申请哈",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 717.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "哎员工申诉在哪辛苦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 739.4,
+          "raw_output": "8"
+        },
+        {
+          "query": "咨询个事食堂就餐麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 719.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗费用控制的规则",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 857.7,
+          "raw_output": "2"
+        },
+        {
+          "query": "食堂充值是什么辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 780.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "咨询个事网页打不开麻烦了",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 679.1,
+          "raw_output": "1"
+        },
+        {
+          "query": "请问360评估麻烦了",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 796.7,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗想知道VPN证书麻烦了",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 822.4,
+          "raw_output": "1"
+        },
+        {
+          "query": "好奇人生的意义",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1951.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "样品申请如何办理",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 841.3,
+          "raw_output": "7"
+        },
+        {
+          "query": "哎格式条款",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 780.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "打扰了今天心情不错?",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1390.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "请问电动车充电标准",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 698.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "CRM录入的政策",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 897.8,
+          "raw_output": "7"
+        },
+        {
+          "query": "请问落户政策怎么操作谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 1010.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "你好请问保密期限",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 964.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "哎公司档案转移",
+          "expected": "hr_onboarding",
+          "predicted": "admin_logistics",
+          "correct": false,
+          "latency_ms": 538.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "差旅政策的规则谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 696.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个社保转移怎么办理",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 1157.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个退休办理麻烦说下谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 787.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了麻烦问下带宽不够",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 538.3,
+          "raw_output": "1"
+        },
+        {
+          "query": "授权许可审批哈",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 673.3,
+          "raw_output": "6"
+        },
+        {
+          "query": "试用期多久怎么操作？",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 1049.5,
+          "raw_output": "3"
+        },
+        {
+          "query": "竞业协议怎么弄谢谢啦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 587.1,
+          "raw_output": "6"
+        },
+        {
+          "query": "员工活动的规则~",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 640.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "弹性工作制需要什么材料谢谢",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1039.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "住房补贴怎么申请~",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 1110.5,
+          "raw_output": "2"
+        },
+        {
+          "query": "咨询个事税务报销哈",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 756.2,
+          "raw_output": "2"
+        },
+        {
+          "query": "哎，说个故事?",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 1155.9,
+          "raw_output": "8"
+        },
+        {
+          "query": "那个工伤假规定",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 609.4,
+          "raw_output": "0"
+        },
+        {
+          "query": "哎内推奖励时间谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 721.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "班车取消谢谢啦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 539.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "请问咨询下设备报修麻烦了",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 588.3,
+          "raw_output": "5"
+        },
+        {
+          "query": "社保转移的规则~",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 1091.8,
+          "raw_output": "2"
+        },
+        {
+          "query": "请问咱新客户开发辛苦",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 776.9,
+          "raw_output": "7"
+        },
+        {
+          "query": "你好几点下班谢谢啦",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 754.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "那个PLC报警标准",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 935.3,
+          "raw_output": "5"
+        },
+        {
+          "query": "报销逾期标准",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 1198.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "哎关于电子签章谢谢啦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 578.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "请问病假工资流程",
+          "expected": "policy_attendance",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 641.1,
+          "raw_output": "2"
+        },
+        {
+          "query": "进项抵扣是什么谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 905.2,
+          "raw_output": "2"
+        },
+        {
+          "query": "打扰了诉讼流程费用",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 693.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "关于会议预订?",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 825.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗绩效工资的规则",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 791.8,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个急停按钮需要什么材料",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 864.7,
+          "raw_output": "5"
+        },
+        {
+          "query": "那个咱们快递收发",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 580.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "你好酒店预订规定谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "admin_logistics",
+          "correct": false,
+          "latency_ms": 681.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "我失眠了呀？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 984.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎变频器报警是什么",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 836.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问关于采购合同",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 830.4,
+          "raw_output": "6"
+        },
+        {
+          "query": "系统权限麻烦说下谢谢",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 788.5,
+          "raw_output": "1"
+        },
+        {
+          "query": "在吗请问客户档案？",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 1086.2,
+          "raw_output": "7"
+        },
+        {
+          "query": "哎想问下故障记录辛苦",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 950.5,
+          "raw_output": "5"
+        },
+        {
+          "query": "网络故障在哪?",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 640.3,
+          "raw_output": "1"
+        }
+      ]
+    },
+    "v3": {
+      "label": "优化版（扩展人事定义+修正规则）",
+      "sample_size": 200,
+      "accuracy": 0.88,
+      "avg_latency_ms": 761.5,
+      "error_count": 0,
+      "results": [
+        {
+          "query": "那个客户档案费用",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 1035.6,
+          "raw_output": "7"
+        },
+        {
+          "query": "哎投标保证金怎么办理",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 708.5,
+          "raw_output": "7"
+        },
+        {
+          "query": "年休假安排费用？",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 637.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了请问一下陪产假",
+          "expected": "hr_onboarding",
+          "predicted": "policy_attendance",
+          "correct": false,
+          "latency_ms": 733.2,
+          "raw_output": "0"
+        },
+        {
+          "query": "麻烦问下急停按钮辛苦",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 705.4,
+          "raw_output": "5"
+        },
+        {
+          "query": "公司培训费报销谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 944.7,
+          "raw_output": "2"
+        },
+        {
+          "query": "我想问下标准工时？",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1091.2,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了咨询个事授权许可?",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 798.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "社保扣款怎么弄麻烦了",
+          "expected": "finance_expense",
+          "predicted": "hr_onboarding",
+          "correct": false,
+          "latency_ms": 698.3,
+          "raw_output": "3"
+        },
+        {
+          "query": "网络打印机审批辛苦",
+          "expected": "it_vpn",
+          "predicted": "admin_logistics",
+          "correct": false,
+          "latency_ms": 696.5,
+          "raw_output": "4"
+        },
+        {
+          "query": "你好打卡时间规定",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 819.1,
+          "raw_output": "0"
+        },
+        {
+          "query": "咨询下电子签章辛苦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 621.4,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗仲裁申请规定",
+          "expected": "legal_contract",
+          "predicted": "hr_onboarding",
+          "correct": false,
+          "latency_ms": 617.9,
+          "raw_output": "3"
+        },
+        {
+          "query": "请问一下哺乳时间",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1209.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "系统重装麻烦说下",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 949.2,
+          "raw_output": "1"
+        },
+        {
+          "query": "帮我今天天气怎么样麻烦了",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 936.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "快递柜怎么申请哈",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 685.4,
+          "raw_output": "4"
+        },
+        {
+          "query": "你好NPS在哪~",
+          "expected": "sales_marketing",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 935.7,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了请教一下年假怎么休",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 876.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "盖章流程怎么操作辛苦",
+          "expected": "admin_logistics",
+          "predicted": "legal_contract",
+          "correct": false,
+          "latency_ms": 601.0,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗格式条款的规则",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 695.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "请问一下8D报告？",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 704.9,
+          "raw_output": "5"
+        },
+        {
+          "query": "你好合同盖章怎么操作",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 979.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "请教一下招投标谢谢啦",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 1011.6,
+          "raw_output": "7"
+        },
+        {
+          "query": "自行车停放是什么麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 701.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗公司社保转移谢谢",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 999.2,
+          "raw_output": "3"
+        },
+        {
+          "query": "宿舍设施怎么申请麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 562.8,
+          "raw_output": "4"
+        },
+        {
+          "query": "哎工会福利谢谢辛苦",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 831.2,
+          "raw_output": "3"
+        },
+        {
+          "query": "关于公司VPN辛苦",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 736.8,
+          "raw_output": "1"
+        },
+        {
+          "query": "你好公司医务室",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 973.2,
+          "raw_output": "4"
+        },
+        {
+          "query": "回款跟进时间辛苦",
+          "expected": "sales_marketing",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 884.4,
+          "raw_output": "2"
+        },
+        {
+          "query": "请问想知道电机过载~",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 1040.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "考勤申诉哈",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 1137.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "账期管理怎么办理辛苦",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 939.6,
+          "raw_output": "7"
+        },
+        {
+          "query": "班车投诉谢谢辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 818.9,
+          "raw_output": "4"
+        },
+        {
+          "query": "模具保养在哪？",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 516.7,
+          "raw_output": "5"
+        },
+        {
+          "query": "产线故障的规则？",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 479.6,
+          "raw_output": "5"
+        },
+        {
+          "query": "失业金麻烦说下谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 742.9,
+          "raw_output": "3"
+        },
+        {
+          "query": "请问会议室冲突怎么申请辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1177.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "想问下员工申诉谢谢",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 912.9,
+          "raw_output": "3"
+        },
+        {
+          "query": "想了解下职级体系?",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 881.4,
+          "raw_output": "3"
+        },
+        {
+          "query": "饮用水标准",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 677.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗数据备份",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 860.5,
+          "raw_output": "1"
+        },
+        {
+          "query": "医保报销怎么办麻烦了",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 1058.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "公司光栅保护",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 938.3,
+          "raw_output": "5"
+        },
+        {
+          "query": "哎想知道市场调研",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 956.0,
+          "raw_output": "7"
+        },
+        {
+          "query": "咱们法律顾问",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 519.0,
+          "raw_output": "6"
+        },
+        {
+          "query": "打扰了你会唱歌吗，你说呢？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 580.1,
+          "raw_output": "8"
+        },
+        {
+          "query": "合同盖章在哪哈",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 501.3,
+          "raw_output": "6"
+        },
+        {
+          "query": "想了解下日历共享麻烦了",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 486.1,
+          "raw_output": "1"
+        },
+        {
+          "query": "在吗想问下合同台账",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 690.5,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗离职年假审批",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 627.1,
+          "raw_output": "0"
+        },
+        {
+          "query": "请问键盘失灵标准？",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 531.4,
+          "raw_output": "1"
+        },
+        {
+          "query": "问个事合同盖章~",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 576.8,
+          "raw_output": "6"
+        },
+        {
+          "query": "打扰了关于不可抗力?",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 877.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗事假扣薪流程",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 710.1,
+          "raw_output": "0"
+        },
+        {
+          "query": "哎请问入职材料",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 792.9,
+          "raw_output": "3"
+        },
+        {
+          "query": "哎你说中午吃什么谢谢啦",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 709.2,
+          "raw_output": "8"
+        },
+        {
+          "query": "你好全勤奖需要什么材料",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 482.3,
+          "raw_output": "0"
+        },
+        {
+          "query": "补卡规则费用辛苦",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 636.4,
+          "raw_output": "0"
+        },
+        {
+          "query": "照明报修怎么申请谢谢啦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 760.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗关于内推奖励谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 1203.3,
+          "raw_output": "3"
+        },
+        {
+          "query": "试单怎么办麻烦了",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 640.9,
+          "raw_output": "7"
+        },
+        {
+          "query": "那个咱们节假日加班",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 669.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "我想说个故事？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 717.7,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗鼓励一下我呀谢谢啦",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 997.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎人脸识别怎么办？",
+          "expected": "policy_attendance",
+          "predicted": "it_vpn",
+          "correct": false,
+          "latency_ms": 699.2,
+          "raw_output": "1"
+        },
+        {
+          "query": "宿舍申请怎么办理麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 648.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗备件库存条件",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 729.5,
+          "raw_output": "5"
+        },
+        {
+          "query": "在吗机票预订",
+          "expected": "finance_expense",
+          "predicted": "admin_logistics",
+          "correct": false,
+          "latency_ms": 680.4,
+          "raw_output": "4"
+        },
+        {
+          "query": "请问咨询下应收账款？",
+          "expected": "sales_marketing",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 620.8,
+          "raw_output": "2"
+        },
+        {
+          "query": "咱特殊价格",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 821.7,
+          "raw_output": "7"
+        },
+        {
+          "query": "技改项目麻烦说下?",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 860.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问想了解下竞业协议谢谢啦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 799.5,
+          "raw_output": "6"
+        },
+        {
+          "query": "你好麻烦问下人脸识别谢谢",
+          "expected": "policy_attendance",
+          "predicted": "it_vpn",
+          "correct": false,
+          "latency_ms": 900.3,
+          "raw_output": "1"
+        },
+        {
+          "query": "咱们登录失败哈",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 748.9,
+          "raw_output": "1"
+        },
+        {
+          "query": "那个入职材料要多久",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 558.9,
+          "raw_output": "3"
+        },
+        {
+          "query": "标书制作的规则？",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 615.4,
+          "raw_output": "7"
+        },
+        {
+          "query": "你好综合工时要多久辛苦",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 819.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "哎，你是机器人吗?",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 781.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗公司试用期考核",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 577.7,
+          "raw_output": "3"
+        },
+        {
+          "query": "你好问个事竞业协议",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 716.1,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗夜间津贴要多久",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 698.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了VPN连接怎么申请",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 906.3,
+          "raw_output": "1"
+        },
+        {
+          "query": "想问下停车位辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 565.2,
+          "raw_output": "4"
+        },
+        {
+          "query": "那个预算申请标准",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 707.7,
+          "raw_output": "2"
+        },
+        {
+          "query": "打扰了公司合同台账",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 872.1,
+          "raw_output": "6"
+        },
+        {
+          "query": "在吗设备点检需要什么材料",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 671.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "我想你怕黑吗辛苦",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 944.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "那个备件周期的规则",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 850.3,
+          "raw_output": "5"
+        },
+        {
+          "query": "哎招投标时间",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 587.8,
+          "raw_output": "7"
+        },
+        {
+          "query": "关于发票真伪辛苦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 900.4,
+          "raw_output": "2"
+        },
+        {
+          "query": "请问我想问下备件库存",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 1328.8,
+          "raw_output": "5"
+        },
+        {
+          "query": "想问下设备维修麻烦了",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 667.7,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问给我你是机器人吗",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 928.5,
+          "raw_output": "8"
+        },
+        {
+          "query": "团建活动是什么?",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 418.2,
+          "raw_output": "3"
+        },
+        {
+          "query": "陪产假需要什么材料?",
+          "expected": "hr_onboarding",
+          "predicted": "policy_attendance",
+          "correct": false,
+          "latency_ms": 685.1,
+          "raw_output": "0"
+        },
+        {
+          "query": "在吗传感器故障费用",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 752.5,
+          "raw_output": "5"
+        },
+        {
+          "query": "落户政策费用谢谢",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 775.5,
+          "raw_output": "3"
+        },
+        {
+          "query": "打扰了你说你喜欢什么颜色",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 709.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "律师函麻烦说下麻烦了",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 670.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "晚上好啊谢谢",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 895.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "我想谢谢你谢谢",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 670.3,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了银行账户怎么申请麻烦了",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 1046.6,
+          "raw_output": "2"
+        },
+        {
+          "query": "我想你叫什么名字？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 577.1,
+          "raw_output": "8"
+        },
+        {
+          "query": "电机过载流程谢谢",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 777.0,
+          "raw_output": "5"
+        },
+        {
+          "query": "问个事员工手册辛苦",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 1068.1,
+          "raw_output": "3"
+        },
+        {
+          "query": "关于5S管理?",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 674.7,
+          "raw_output": "5"
+        },
+        {
+          "query": "哎访客登记规定",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 720.3,
+          "raw_output": "4"
+        },
+        {
+          "query": "那个咱们出差补助",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 754.2,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个好奇你累不累哈",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 780.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗你说你有朋友吗~",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 878.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎关于健身房使用",
+          "expected": "admin_logistics",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 620.7,
+          "raw_output": "8"
+        },
+        {
+          "query": "打扰了我想问下标书制作",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 549.2,
+          "raw_output": "7"
+        },
+        {
+          "query": "邮箱容量怎么操作",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 940.7,
+          "raw_output": "1"
+        },
+        {
+          "query": "你好排产要多久谢谢啦",
+          "expected": "sales_marketing",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 795.7,
+          "raw_output": "8"
+        },
+        {
+          "query": "咨询下储物柜麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 556.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "饭卡补办时间谢谢",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 952.1,
+          "raw_output": "4"
+        },
+        {
+          "query": "医保报销怎么申请？",
+          "expected": "hr_onboarding",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 638.8,
+          "raw_output": "2"
+        },
+        {
+          "query": "区域划分审批?",
+          "expected": "sales_marketing",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 764.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "在吗麻烦问下会议室设备",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 558.9,
+          "raw_output": "4"
+        },
+        {
+          "query": "离职流程要求？",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 829.7,
+          "raw_output": "3"
+        },
+        {
+          "query": "哎麻烦问下设备报修~",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 827.8,
+          "raw_output": "5"
+        },
+        {
+          "query": "人才推荐怎么弄？",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 1215.7,
+          "raw_output": "3"
+        },
+        {
+          "query": "请问会议预订流程",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 476.0,
+          "raw_output": "4"
+        },
+        {
+          "query": "打扰了丧假标准？",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 959.1,
+          "raw_output": "0"
+        },
+        {
+          "query": "想了解下故障代码哈",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 675.7,
+          "raw_output": "5"
+        },
+        {
+          "query": "卫生保洁的规则辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 577.7,
+          "raw_output": "4"
+        },
+        {
+          "query": "那个咨询个事补贴发放",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 884.9,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个离职证明是什么",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 641.6,
+          "raw_output": "3"
+        },
+        {
+          "query": "你好卫生保洁怎么申请",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 514.4,
+          "raw_output": "4"
+        },
+        {
+          "query": "请问个人信息保护标准",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 668.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "那个咨询个事工伤假",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 563.5,
+          "raw_output": "0"
+        },
+        {
+          "query": "你好财务系统辛苦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 533.8,
+          "raw_output": "2"
+        },
+        {
+          "query": "你好MTBF如何办理",
+          "expected": "engineering_eq",
+          "predicted": "other_chitchat",
+          "correct": false,
+          "latency_ms": 926.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "请问咱宣传册谢谢",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 670.8,
+          "raw_output": "7"
+        },
+        {
+          "query": "在吗上下班时间在哪",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 905.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "会议室冲突的规则麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 542.5,
+          "raw_output": "4"
+        },
+        {
+          "query": "产品培训怎么操作?",
+          "expected": "sales_marketing",
+          "predicted": "hr_onboarding",
+          "correct": false,
+          "latency_ms": 787.4,
+          "raw_output": "3"
+        },
+        {
+          "query": "那个维修工单怎么申请",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 677.4,
+          "raw_output": "5"
+        },
+        {
+          "query": "你好打卡补录麻烦说下",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 560.7,
+          "raw_output": "0"
+        },
+        {
+          "query": "请问想知道公章使用",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 905.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "哎迟到罚款标准",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 618.6,
+          "raw_output": "0"
+        },
+        {
+          "query": "打扰了想知道带宽不够",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 630.1,
+          "raw_output": "1"
+        },
+        {
+          "query": "哎，你怕黑吗谢谢",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 558.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "加班时长上限怎么申请~",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 707.9,
+          "raw_output": "0"
+        },
+        {
+          "query": "班车投诉怎么申请哈",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 918.5,
+          "raw_output": "4"
+        },
+        {
+          "query": "哎员工申诉在哪辛苦",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 1189.9,
+          "raw_output": "3"
+        },
+        {
+          "query": "咨询个事食堂就餐麻烦了",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 717.0,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗费用控制的规则",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 947.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "食堂充值是什么辛苦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 1071.0,
+          "raw_output": "4"
+        },
+        {
+          "query": "咨询个事网页打不开麻烦了",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 517.9,
+          "raw_output": "1"
+        },
+        {
+          "query": "请问360评估麻烦了",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 999.9,
+          "raw_output": "3"
+        },
+        {
+          "query": "在吗想知道VPN证书麻烦了",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 900.5,
+          "raw_output": "1"
+        },
+        {
+          "query": "好奇人生的意义",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 778.0,
+          "raw_output": "8"
+        },
+        {
+          "query": "样品申请如何办理",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 834.5,
+          "raw_output": "7"
+        },
+        {
+          "query": "哎格式条款",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 681.7,
+          "raw_output": "6"
+        },
+        {
+          "query": "打扰了今天心情不错?",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 624.2,
+          "raw_output": "8"
+        },
+        {
+          "query": "请问电动车充电标准",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 489.1,
+          "raw_output": "4"
+        },
+        {
+          "query": "CRM录入的政策",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 645.6,
+          "raw_output": "7"
+        },
+        {
+          "query": "请问落户政策怎么操作谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 716.8,
+          "raw_output": "3"
+        },
+        {
+          "query": "你好请问保密期限",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 593.6,
+          "raw_output": "6"
+        },
+        {
+          "query": "哎公司档案转移",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 998.6,
+          "raw_output": "3"
+        },
+        {
+          "query": "差旅政策的规则谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 556.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "那个社保转移怎么办理",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 777.3,
+          "raw_output": "3"
+        },
+        {
+          "query": "那个退休办理麻烦说下谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 657.8,
+          "raw_output": "3"
+        },
+        {
+          "query": "打扰了麻烦问下带宽不够",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 1122.3,
+          "raw_output": "1"
+        },
+        {
+          "query": "授权许可审批哈",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 754.2,
+          "raw_output": "6"
+        },
+        {
+          "query": "试用期多久怎么操作？",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 558.5,
+          "raw_output": "3"
+        },
+        {
+          "query": "竞业协议怎么弄谢谢啦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 659.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "员工活动的规则~",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 741.3,
+          "raw_output": "3"
+        },
+        {
+          "query": "弹性工作制需要什么材料谢谢",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 882.8,
+          "raw_output": "0"
+        },
+        {
+          "query": "住房补贴怎么申请~",
+          "expected": "finance_expense",
+          "predicted": "hr_onboarding",
+          "correct": false,
+          "latency_ms": 773.1,
+          "raw_output": "3"
+        },
+        {
+          "query": "咨询个事税务报销哈",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 1059.5,
+          "raw_output": "2"
+        },
+        {
+          "query": "哎，说个故事?",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 657.6,
+          "raw_output": "8"
+        },
+        {
+          "query": "那个工伤假规定",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 676.0,
+          "raw_output": "0"
+        },
+        {
+          "query": "哎内推奖励时间谢谢啦",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 588.5,
+          "raw_output": "3"
+        },
+        {
+          "query": "班车取消谢谢啦",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 747.9,
+          "raw_output": "4"
+        },
+        {
+          "query": "请问咨询下设备报修麻烦了",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 718.1,
+          "raw_output": "5"
+        },
+        {
+          "query": "社保转移的规则~",
+          "expected": "hr_onboarding",
+          "predicted": "hr_onboarding",
+          "correct": true,
+          "latency_ms": 1003.1,
+          "raw_output": "3"
+        },
+        {
+          "query": "请问咱新客户开发辛苦",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 872.1,
+          "raw_output": "7"
+        },
+        {
+          "query": "你好几点下班谢谢啦",
+          "expected": "policy_attendance",
+          "predicted": "policy_attendance",
+          "correct": true,
+          "latency_ms": 626.9,
+          "raw_output": "0"
+        },
+        {
+          "query": "那个PLC报警标准",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 969.6,
+          "raw_output": "5"
+        },
+        {
+          "query": "报销逾期标准",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 598.4,
+          "raw_output": "2"
+        },
+        {
+          "query": "哎关于电子签章谢谢啦",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 725.9,
+          "raw_output": "6"
+        },
+        {
+          "query": "请问病假工资流程",
+          "expected": "policy_attendance",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 716.5,
+          "raw_output": "2"
+        },
+        {
+          "query": "进项抵扣是什么谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "finance_expense",
+          "correct": true,
+          "latency_ms": 598.0,
+          "raw_output": "2"
+        },
+        {
+          "query": "打扰了诉讼流程费用",
+          "expected": "legal_contract",
+          "predicted": "finance_expense",
+          "correct": false,
+          "latency_ms": 573.2,
+          "raw_output": "2"
+        },
+        {
+          "query": "关于会议预订?",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 616.1,
+          "raw_output": "4"
+        },
+        {
+          "query": "在吗绩效工资的规则",
+          "expected": "finance_expense",
+          "predicted": "hr_onboarding",
+          "correct": false,
+          "latency_ms": 686.5,
+          "raw_output": "3"
+        },
+        {
+          "query": "那个急停按钮需要什么材料",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 997.7,
+          "raw_output": "5"
+        },
+        {
+          "query": "那个咱们快递收发",
+          "expected": "admin_logistics",
+          "predicted": "admin_logistics",
+          "correct": true,
+          "latency_ms": 723.6,
+          "raw_output": "4"
+        },
+        {
+          "query": "你好酒店预订规定谢谢啦",
+          "expected": "finance_expense",
+          "predicted": "admin_logistics",
+          "correct": false,
+          "latency_ms": 629.5,
+          "raw_output": "4"
+        },
+        {
+          "query": "我失眠了呀？",
+          "expected": "other_chitchat",
+          "predicted": "other_chitchat",
+          "correct": true,
+          "latency_ms": 619.8,
+          "raw_output": "8"
+        },
+        {
+          "query": "哎变频器报警是什么",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 811.6,
+          "raw_output": "5"
+        },
+        {
+          "query": "请问关于采购合同",
+          "expected": "legal_contract",
+          "predicted": "legal_contract",
+          "correct": true,
+          "latency_ms": 678.6,
+          "raw_output": "6"
+        },
+        {
+          "query": "系统权限麻烦说下谢谢",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 780.1,
+          "raw_output": "1"
+        },
+        {
+          "query": "在吗请问客户档案？",
+          "expected": "sales_marketing",
+          "predicted": "sales_marketing",
+          "correct": true,
+          "latency_ms": 696.5,
+          "raw_output": "7"
+        },
+        {
+          "query": "哎想问下故障记录辛苦",
+          "expected": "engineering_eq",
+          "predicted": "engineering_eq",
+          "correct": true,
+          "latency_ms": 725.3,
+          "raw_output": "5"
+        },
+        {
+          "query": "网络故障在哪?",
+          "expected": "it_vpn",
+          "predicted": "it_vpn",
+          "correct": true,
+          "latency_ms": 560.9,
+          "raw_output": "1"
+        }
+      ]
+    }
+  },
+  "comparison": {
+    "version_order": [
+      "v1",
+      "v2",
+      "v3"
+    ],
+    "deltas": "v1->v2 准确率 +0.0250，延迟 -89.6 ms；v2->v3 准确率 +0.0750，延迟 -45.9 ms",
+    "best_version": "v3",
+    "best_accuracy": 0.88,
+    "improvement_vs_base": 0.1,
+    "conclusion": "共 3 版提示词，最佳为 v3（准确率 0.8800）；相对基线 v1 提升 +0.1000。延迟差异主要来自网络波动，而非提示词本身。"
+  }
+}
