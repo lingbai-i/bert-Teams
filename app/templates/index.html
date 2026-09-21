@@ -5,80 +5,452 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>企业意图分类系统</title>
 <style>
+  /* ============================================================
+     设计令牌：颜色 / 圆角 / 阴影 / 字体
+     集中定义便于整体换肤（后续加深色模式只需覆盖这一块变量）
+     ============================================================ */
+  :root {
+    --bg:            #F7F8FC;
+    --surface:       #FFFFFF;
+    --surface-soft:  #FAFBFF;
+    --border:        #E9EBF3;
+    --border-strong: #DCE0EC;
+
+    --text-1: #171A26;
+    --text-2: #565D75;
+    --text-3: #939AAD;
+
+    --primary:      #4F6BFF;
+    --primary-600:  #3D57E8;
+    --primary-soft: #EEF1FF;
+    --accent:       #8B5CF6;
+
+    --success:      #0F9D58;
+    --success-soft: #EAF8F0;
+    --success-line: #BFE6D2;
+    --danger:       #D93F3F;
+    --danger-soft:  #FDF0F0;
+    --danger-line:  #F5CCCC;
+
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 18px;
+    --r-xl: 24px;
+
+    /* 阴影三级制：贴近 / 悬浮 / 聚焦 */
+    --sh-1: 0 1px 2px rgba(23,26,38,.04), 0 1px 3px rgba(23,26,38,.05);
+    --sh-2: 0 2px 6px rgba(23,26,38,.05), 0 8px 20px rgba(23,26,38,.06);
+    --sh-3: 0 4px 14px rgba(23,26,38,.06), 0 20px 48px rgba(23,26,38,.09);
+
+    /* 字体全部走系统栈，不引外网字体，保证离线可用 */
+    --font: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei",
+            "Source Han Sans SC", "Noto Sans CJK SC", system-ui,
+            -apple-system, "Segoe UI", sans-serif;
+    --font-num: "SF Mono", "JetBrains Mono", "Cascadia Mono", Consolas,
+                "PingFang SC", monospace;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: "Microsoft YaHei", sans-serif; background: #f0f2f5;
-         display: flex; justify-content: center; padding: 40px 16px; }
-  .container { width: 100%; max-width: 860px; background: #fff;
-               border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08);
-               padding: 28px; }
-  h1 { font-size: 20px; margin-bottom: 4px; }
-  .subtitle { color: #888; font-size: 13px; margin-bottom: 20px; }
-  .row { display: flex; gap: 10px; margin-bottom: 12px; }
-  select, button { padding: 8px 14px; border-radius: 8px; border: 1px solid #d9d9d9;
-                   font-size: 14px; }
-  select { flex: 1; }
-  textarea { width: 100%; height: 90px; padding: 10px; border-radius: 8px;
-             border: 1px solid #d9d9d9; font-size: 14px; resize: vertical;
-             margin-bottom: 12px; }
-  button { cursor: pointer; border: none; }
-  button:disabled { opacity: .5; cursor: not-allowed; }
-  .btn-primary { background: #1677ff; color: #fff; }
-  .btn-primary:hover:not(:disabled) { background: #4096ff; }
-  .btn-default { background: #fff; border: 1px solid #d9d9d9; }
-  .btn-default:hover:not(:disabled) { border-color: #1677ff; color: #1677ff; }
 
-  /* ---- 单模型结果卡片 ---- */
-  .result { display: none; margin-top: 20px; padding: 16px; border-radius: 8px;
-            background: #f6ffed; border: 1px solid #b7eb8f; }
-  .result.error { background: #fff2f0; border-color: #ffccc7; }
-  .intent { font-size: 20px; font-weight: bold; color: #237804; }
-  .intent .en { font-size: 13px; font-weight: normal; color: #7cb305;
-                margin-left: 8px; }
-  .metrics { display: flex; flex-wrap: wrap; gap: 32px; margin-top: 14px; }
-  .metric-k { font-size: 12px; color: #888; }
-  .metric-v { font-size: 18px; font-weight: 600; color: #1f1f1f;
-              font-variant-numeric: tabular-nums; }
-  .top3 { margin-top: 16px; }
-  .top3-title { font-size: 12px; color: #888; margin-bottom: 6px; }
-  .top3-item { display: flex; align-items: center; gap: 10px; margin-top: 6px;
-               font-size: 13px; }
-  .bar-track { flex: 1; height: 10px; background: #f0f0f0; border-radius: 5px;
-               overflow: hidden; }
-  .bar { height: 100%; border-radius: 5px; background: #1677ff; }
-  .bar-label { width: 150px; color: #333; }
-  .bar-value { width: 56px; text-align: right; color: #666;
-               font-variant-numeric: tabular-nums; }
+  body {
+    font-family: var(--font);
+    color: var(--text-1);
+    background-color: var(--bg);
+    /* 三个极淡的径向渐变制造空间层次；fixed 保证滚动时不位移 */
+    background-image:
+      radial-gradient(900px 520px at 12% -8%,  rgba(79,107,255,.14), transparent 62%),
+      radial-gradient(760px 460px at 96% 2%,   rgba(139,92,246,.11), transparent 58%),
+      radial-gradient(680px 420px at 50% 112%, rgba(56,189,248,.08), transparent 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 48px 20px 64px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-  /* ---- 多模型对比表 ---- */
-  .compare { display: none; margin-top: 20px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #f0f0f0; }
-  th { color: #888; font-weight: normal; background: #fafafa; }
+  .shell { width: 100%; max-width: 880px; }
+
+  /* ---------------- 页头 ---------------- */
+  .hero { margin-bottom: 26px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary-600);
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .badge::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--primary);
+  }
+
+  h1 {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .lede {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.7;
+    max-width: 60ch;
+  }
+
+  /* ---------------- 主面板 ---------------- */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    box-shadow: var(--sh-3);
+    padding: 24px;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-3);
+    letter-spacing: .02em;
+    margin-bottom: 8px;
+  }
+
+  select, textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-1);
+    background: var(--surface-soft);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    padding: 11px 13px;
+    transition: border-color .18s, box-shadow .18s, background .18s;
+  }
+  select:focus, textarea:focus {
+    outline: none;
+    background: var(--surface);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79,107,255,.13);
+  }
+  select { cursor: pointer; margin-bottom: 16px; }
+  textarea {
+    height: 96px;
+    resize: vertical;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  textarea::placeholder { color: var(--text-3); }
+
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  button {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: var(--r-md);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .16s cubic-bezier(.22,1,.36,1),
+                box-shadow .18s, background .18s, color .18s, border-color .18s;
+  }
+  button:active:not(:disabled) { transform: translateY(1px); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+
+  .btn-primary {
+    background: linear-gradient(180deg, var(--primary), var(--primary-600));
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(61,87,232,.25), 0 6px 18px rgba(79,107,255,.26);
+  }
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(61,87,232,.28), 0 10px 26px rgba(79,107,255,.34);
+  }
+
+  .btn-ghost {
+    background: var(--surface);
+    color: var(--text-2);
+    border-color: var(--border-strong);
+    box-shadow: var(--sh-1);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    transform: translateY(-1px);
+    color: var(--primary-600);
+    border-color: #C3CCF7;
+    box-shadow: var(--sh-2);
+  }
+
+  /* ---------------- 动效 ---------------- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes growBar {
+    from { width: 0; }
+    to   { width: var(--w); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------------- 单模型结果 ---------------- */
+  .result {
+    display: none;
+    margin-top: 22px;
+    padding: 22px;
+    border-radius: var(--r-lg);
+    background: linear-gradient(180deg, var(--success-soft), var(--surface) 78%);
+    border: 1px solid var(--success-line);
+    box-shadow: var(--sh-2);
+  }
+  .result.error {
+    background: linear-gradient(180deg, var(--danger-soft), var(--surface) 78%);
+    border-color: var(--danger-line);
+  }
+
+  .intent-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    animation: fadeUp .44s cubic-bezier(.22,1,.36,1) both;
+  }
+  .intent {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: #0B7A44;
+  }
+  .result.error .intent { color: var(--danger); }
+  .intent .en {
+    font-family: var(--font-num);
+    font-size: 12.5px;
+    font-weight: 400;
+    color: var(--text-3);
+  }
+
+  .metrics {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--success-line);
+  }
+  .metric {
+    padding-right: 32px;
+    margin-right: 32px;
+    border-right: 1px solid rgba(23,26,38,.07);
+  }
+  .metric:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+  .metric-k {
+    font-size: 11.5px;
+    color: var(--text-3);
+    letter-spacing: .03em;
+    margin-bottom: 5px;
+  }
+  .metric-v {
+    font-family: var(--font-num);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-1);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.01em;
+  }
+
+  .top3 { margin-top: 20px; }
+  .top3-title {
+    font-size: 11.5px;
+    color: var(--text-3);
+    letter-spacing: .03em;
+    margin-bottom: 10px;
+  }
+  .top3-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+  .bar-label { width: 132px; color: var(--text-2); flex-shrink: 0; }
+  .bar-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(23,26,38,.06);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #9AA9FF, #D3DAF5);
+    animation: growBar .78s cubic-bezier(.22,1,.36,1) both;
+  }
+  .top3-item.is-first .bar {
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    box-shadow: 0 0 12px rgba(79,107,255,.35);
+  }
+  .top3-item.is-first .bar-label { color: var(--text-1); font-weight: 500; }
+  .bar-value {
+    width: 58px;
+    text-align: right;
+    color: var(--text-2);
+    font-family: var(--font-num);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  /* ---------------- 多模型对比 ---------------- */
+  .compare { display: none; margin-top: 22px; }
+
+  .compare-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-2);
+    overflow: hidden;
+    animation: fadeUp .46s cubic-bezier(.22,1,.36,1) both;
+  }
+  .compare-head {
+    padding: 16px 20px 13px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .compare-head h2 { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  .compare-head span { font-size: 12.5px; color: var(--text-3); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { padding: 13px 20px; text-align: left; }
+  th {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-3);
+    letter-spacing: .03em;
+    background: var(--surface-soft);
+    border-bottom: 1px solid var(--border);
+  }
+  td { border-bottom: 1px solid var(--border); color: var(--text-2); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr { animation: fadeUp .4s cubic-bezier(.22,1,.36,1) both; }
+  tbody tr:hover td { background: rgba(79,107,255,.035); }
+
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-  tr.best td { background: #f6ffed; }
-  .tag { display: inline-block; padding: 1px 6px; border-radius: 4px;
-         font-size: 11px; background: #e6f4ff; color: #1677ff; margin-left: 6px; }
-  .muted { color: #aaa; }
+  td.num { font-family: var(--font-num); color: var(--text-1); }
+  td.model-name { color: var(--text-1); font-weight: 500; }
+
+  /* 模型名做成文本样式的按钮：点击后在上方展开该模型的详细结果。
+     用 button 而非 span 是为了保留键盘 Tab 可达性与回车激活。 */
+  .model-link {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-bottom: 1px dashed transparent;
+    transition: color .15s, border-color .15s;
+  }
+  .model-link:hover { color: var(--primary); border-bottom-color: var(--primary); }
+  .model-link:focus-visible {
+    outline: none;
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+
+  tr.best td { background: rgba(79,107,255,.055); }
+  tr.best td.model-name { color: var(--primary-600); }
+  tbody tr.is-active td { background: rgba(79,107,255,.10); }
+
+  .tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(79,107,255,.35);
+  }
+  .muted { color: var(--text-3); }
+
+  /* 加载态 */
+  .loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 22px;
+    font-size: 13.5px;
+    color: var(--text-3);
+  }
+  .spinner {
+    width: 15px; height: 15px;
+    border: 2px solid var(--primary-soft);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin .72s linear infinite;
+    flex-shrink: 0;
+  }
+
+  /* 尊重系统的「减少动态效果」偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 28px 14px 48px; }
+    h1 { font-size: 24px; }
+    .metric { padding-right: 20px; margin-right: 20px; }
+    .metric-v { font-size: 18px; }
+    .bar-label { width: 96px; }
+    th, td { padding: 11px 12px; }
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>企业意图分类系统</h1>
-  <div class="subtitle">BERT / 随机森林 / fasttext / LLM 多模型对比 · BERT 文本分类课程项目</div>
+<div class="shell">
 
-  <div class="row">
+  <header class="hero">
+    <div class="badge">BERT 意图分类 · 多模型对比</div>
+    <h1>企业意图分类系统</h1>
+    <p class="lede">
+      输入一句员工提问，模型自动判断它属于 9 个业务类别中的哪一个。
+      支持 BERT 微调、剪枝、量化、BiLSTM 蒸馏多模型横向对比。
+    </p>
+  </header>
+
+  <section class="panel">
+    <label class="field-label" for="modelSelect">选择模型</label>
     <select id="modelSelect"><option value="">正在加载模型列表...</option></select>
-  </div>
-  <textarea id="inputText" placeholder="请输入一句话，例如：年假有几天？"
-            oninput="refreshButtons()"></textarea>
-  <div class="row">
-    <button class="btn-primary" id="btnPredict" onclick="doPredict()">开始分类</button>
-    <button class="btn-default" id="btnCompare" onclick="doCompare()">对比全部模型</button>
-    <button class="btn-default" id="btnClear" onclick="clearAll()">清空</button>
-  </div>
+
+    <label class="field-label" for="inputText">测试文本</label>
+    <textarea id="inputText" placeholder="请输入一句话，例如：年假有几天？"
+              oninput="refreshButtons()"></textarea>
+
+    <div class="actions">
+      <button class="btn-primary" id="btnPredict" onclick="doPredict()">开始分类</button>
+      <button class="btn-ghost" id="btnCompare" onclick="doCompare()">对比全部模型</button>
+      <button class="btn-ghost" id="btnClear" onclick="clearAll()">清空</button>
+    </div>
+  </section>
 
   <div class="result" id="resultBox"></div>
   <div class="compare" id="compareBox"></div>
+
 </div>
 
 <script>
@@ -110,6 +482,7 @@ function esc(s) {
 
 let MODELS = [];
 let BUSY = false;
+let lastCompareRows = [];
 
 async function loadModels() {
   const sel = document.getElementById('modelSelect');
@@ -147,30 +520,63 @@ async function predictOne(text, model) {
 
 function fmtConf(c) { return c != null ? (c * 100).toFixed(1) + '%' : '—'; }
 
+// 数字滚动：只对带 data-count 的元素生效，用三次缓出保证收尾自然。
+function animateCounts(root) {
+  root.querySelectorAll('[data-count]').forEach(function (el) {
+    const to = parseFloat(el.dataset.count);
+    if (!isFinite(to)) return;
+    const dec = parseInt(el.dataset.dec || '1', 10);
+    const suffix = el.dataset.suffix || '';
+    const dur = 620;
+    const t0 = performance.now();
+    function step(t) {
+      const k = Math.min(1, (t - t0) / dur);
+      const eased = 1 - Math.pow(1 - k, 3);
+      el.textContent = (to * eased).toFixed(dec) + suffix;
+      if (k < 1) requestAnimationFrame(step);
+      else el.textContent = to.toFixed(dec) + suffix;
+    }
+    requestAnimationFrame(step);
+  });
+}
+
 function metric(k, v) {
-  return '<div><div class="metric-k">' + k + '</div>' +
+  return '<div class="metric"><div class="metric-k">' + k + '</div>' +
          '<div class="metric-v">' + v + '</div></div>';
 }
 
 function renderResult(data) {
-  let html = '<div class="intent">' + esc(cn(data.intent)) +
+  let html = '<div class="intent-row">' +
+             '<span class="intent">' + esc(cn(data.intent)) + '</span>' +
              '<span class="en">' + esc(data.intent) + '</span></div>';
+
   html += '<div class="metrics">' +
-          metric('响应时间', data.latency_ms.toFixed(1) + ' ms') +
-          metric('置信度', fmtConf(data.confidence)) +
+          metric('响应时间',
+                 '<span data-count="' + data.latency_ms.toFixed(1) +
+                 '" data-dec="1" data-suffix=" ms">0.0 ms</span>') +
+          metric('置信度',
+                 data.confidence != null
+                   ? '<span data-count="' + (data.confidence * 100).toFixed(1) +
+                     '" data-dec="1" data-suffix="%">0.0%</span>'
+                   : '—') +
           metric('模型', esc(data.model)) +
           '</div>';
+
   if (data.top3 && data.top3.length) {
     html += '<div class="top3"><div class="top3-title">Top3 候选</div>';
-    for (const [name, prob] of data.top3) {
+    data.top3.forEach(function (pair, i) {
+      const name = pair[0], prob = pair[1];
       const pct = prob * 100;
-      html += '<div class="top3-item">' +
+      html += '<div class="top3-item' + (i === 0 ? ' is-first' : '') + '"' +
+              ' style="animation:fadeUp .44s cubic-bezier(.22,1,.36,1) both;' +
+              'animation-delay:' + (60 + i * 70) + 'ms">' +
               '<span class="bar-label">' + esc(cn(name)) + '</span>' +
-              '<div class="bar-track"><div class="bar" style="width:' +
-              pct.toFixed(1) + '%"></div></div>' +
+              '<div class="bar-track"><div class="bar" style="--w:' +
+              pct.toFixed(1) + '%;animation-delay:' + (120 + i * 70) +
+              'ms"></div></div>' +
               '<span class="bar-value">' + pct.toFixed(1) + '%</span>' +
               '</div>';
-    }
+    });
     html += '</div>';
   } else {
     html += '<div class="top3"><div class="top3-title muted">' +
@@ -184,24 +590,34 @@ function renderCompare(rows) {
   for (const r of rows) {
     if (r.ok && (fastest === null || r.latency_ms < fastest)) fastest = r.latency_ms;
   }
-  let html = '<table><thead><tr><th>模型</th><th>意图</th>' +
+
+  let html = '<div class="compare-card"><div class="compare-head">' +
+             '<h2>多模型对比</h2><span>共 ' + rows.length +
+             ' 个模型 · 点击模型名查看详细结果</span></div>' +
+             '<table><thead><tr><th>模型</th><th>意图</th>' +
              '<th class="num">置信度</th><th class="num">响应时间</th>' +
              '</tr></thead><tbody>';
-  for (const r of rows) {
+
+  rows.forEach(function (r, i) {
+    const delay = 'style="animation-delay:' + (i * 55) + 'ms"';
     if (!r.ok) {
-      html += '<tr><td>' + esc(r.desc) + '</td><td colspan="3" class="muted">' +
-              esc(r.error) + '</td></tr>';
-      continue;
+      html += '<tr ' + delay + '><td class="model-name">' + esc(r.desc) +
+              '</td><td colspan="3" class="muted">' + esc(r.error) + '</td></tr>';
+      return;
     }
     const best = r.latency_ms === fastest;
-    html += '<tr' + (best ? ' class="best"' : '') + '>' +
-            '<td>' + esc(r.desc) + (best ? '<span class="tag">最快</span>' : '') + '</td>' +
+    html += '<tr' + (best ? ' class="best"' : '') + ' ' + delay + '>' +
+            '<td class="model-name">' +
+            '<button type="button" class="model-link" onclick="showDetail(' +
+            i + ')">' + esc(r.desc) + '</button>' +
+            (best ? '<span class="tag">最快</span>' : '') + '</td>' +
             '<td>' + esc(cn(r.intent)) + '</td>' +
             '<td class="num">' + fmtConf(r.confidence) + '</td>' +
             '<td class="num">' + r.latency_ms.toFixed(1) + ' ms</td>' +
             '</tr>';
-  }
-  return html + '</tbody></table>';
+  });
+
+  return html + '</tbody></table></div>';
 }
 
 // 按钮可用性由「已输入文本 + 有可用模型 + 非请求中」共同决定。
@@ -225,13 +641,19 @@ async function doPredict() {
 
   box.style.display = 'block';
   box.className = 'result';
-  box.innerHTML = '分类中...';
+  box.innerHTML = '<div class="loading"><div class="spinner"></div>分类中…</div>';
   setBusy(true);
   try {
     box.innerHTML = renderResult(await predictOne(text, model));
+    animateCounts(box);
   } catch (e) {
     box.className = 'result error';
-    box.innerHTML = '请求失败：' + esc(e.message);
+    box.innerHTML =
+      '<div class="intent-row"><span class="intent">请求失败</span></div>' +
+      '<div class="metrics"><div class="metric">' +
+      '<div class="metric-k">原因</div>' +
+      '<div class="metric-v" style="font-size:14px;font-weight:400">' +
+      esc(e.message) + '</div></div></div>';
   } finally {
     setBusy(false);
   }
@@ -251,26 +673,50 @@ async function doCompare() {
   try {
     for (let i = 0; i < MODELS.length; i++) {
       const m = MODELS[i];
-      box.innerHTML = '<div class="muted">对比中… (' + (i + 1) + '/' +
-                      MODELS.length + ') ' + esc(m.desc) + '</div>';
+      box.innerHTML = '<div class="compare-card"><div class="loading">' +
+                      '<div class="spinner"></div>正在对比 (' + (i + 1) + '/' +
+                      MODELS.length + ')　' + esc(m.desc) + '</div></div>';
       try {
         const data = await predictOne(text, m.name);
-        rows.push({desc: m.desc, ok: true, intent: data.intent,
-                   confidence: data.confidence, latency_ms: data.latency_ms});
+        rows.push({desc: m.desc, name: m.name, ok: true, intent: data.intent,
+                   confidence: data.confidence, latency_ms: data.latency_ms,
+                   top3: data.top3});
       } catch (e) {
-        rows.push({desc: m.desc, ok: false, error: e.message});
+        rows.push({desc: m.desc, name: m.name, ok: false, error: e.message});
       }
     }
+    lastCompareRows = rows;
     box.innerHTML = renderCompare(rows);
   } finally {
     setBusy(false);
   }
 }
 
+// 对比结果已含每个模型的完整预测数据，点模型名直接复用，不再请求一次。
+// 结果卡片位于表格上方，故滚动过去，避免用户以为没反应。
+function showDetail(i) {
+  const r = lastCompareRows[i];
+  if (!r || !r.ok) return;
+  const box = document.getElementById('resultBox');
+  box.style.display = 'block';
+  box.className = 'result';
+  box.innerHTML = renderResult({intent: r.intent, confidence: r.confidence,
+                                latency_ms: r.latency_ms, model: r.name,
+                                top3: r.top3});
+  animateCounts(box);
+  const trs = document.querySelectorAll('#compareBox tbody tr');
+  for (let k = 0; k < trs.length; k++) {
+    trs[k].classList.toggle('is-active', k === i);
+  }
+  box.scrollIntoView({behavior: 'smooth', block: 'center'});
+}
+
 function clearAll() {
   document.getElementById('inputText').value = '';
   document.getElementById('resultBox').style.display = 'none';
   document.getElementById('compareBox').style.display = 'none';
+  lastCompareRows = [];
+  refreshButtons();
 }
 
 loadModels();
