@@ -118,7 +118,7 @@ python -m app.flask_app --port 5000     # 浏览器打开 http://localhost:5000
 - `data/train.txt` 202,500 条 / `test.txt`、`dev.txt` 各 11,250 条，格式 `文本\t标签ID`
 - `data/class.txt` 9 个意图标签（8 业务 + 其他闲聊），行号即标签 ID
 - `data/stopwords.txt` 749 个停用词（TF-IDF 用）
-- `data/eval/test_queries.jsonl` 人工真实问句评估集（初始 18 条，全员扩充至 100+）
+- `data/eval/test_queries.jsonl` 人工真实问句评估集（初始 18 条，评估组扩充至 118 条，覆盖全部 9 类，含 100 条全员新增问句）
 
 **数据质量提示**：训练/测试集由模板合成，同源同分布，BERT 分数会虚高。
 真实水平以人工评估集为准——这是答辩的重要亮点而非问题。
