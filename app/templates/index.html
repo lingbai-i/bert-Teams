@@ -69,7 +69,8 @@
   <div class="row">
     <select id="modelSelect"><option value="">正在加载模型列表...</option></select>
   </div>
-  <textarea id="inputText" placeholder="请输入一句话，例如：年假有几天？"></textarea>
+  <textarea id="inputText" placeholder="请输入一句话，例如：年假有几天？"
+            oninput="refreshButtons()"></textarea>
   <div class="row">
     <button class="btn-primary" id="btnPredict" onclick="doPredict()">开始分类</button>
     <button class="btn-default" id="btnCompare" onclick="doCompare()">对比全部模型</button>
@@ -108,6 +109,7 @@ function esc(s) {
 }
 
 let MODELS = [];
+let BUSY = false;
 
 async function loadModels() {
   const sel = document.getElementById('modelSelect');
@@ -118,9 +120,6 @@ async function loadModels() {
     sel.innerHTML = '';
     if (MODELS.length === 0) {
       sel.innerHTML = '<option value="">暂无可用的模型，请先完成训练</option>';
-      document.getElementById('btnPredict').disabled = true;
-      document.getElementById('btnCompare').disabled = true;
-      return;
     }
     for (const m of MODELS) {
       const opt = document.createElement('option');
@@ -131,6 +130,7 @@ async function loadModels() {
   } catch (e) {
     sel.innerHTML = '<option value="">模型列表加载失败</option>';
   }
+  refreshButtons();
 }
 
 // 调用 /api/predict 并返回统一结构；失败时抛出带可读原因的异常。
@@ -204,19 +204,24 @@ function renderCompare(rows) {
   return html + '</tbody></table>';
 }
 
-function setBusy(busy) {
-  for (const id of ['btnPredict', 'btnCompare', 'btnClear']) {
-    document.getElementById(id).disabled = busy;
-  }
+// 按钮可用性由「已输入文本 + 有可用模型 + 非请求中」共同决定。
+// 空输入时直接禁用，避免依赖原生 alert 弹窗打断演示流程。
+function refreshButtons() {
+  const hasText = document.getElementById('inputText').value.trim().length > 0;
+  const ready = hasText && MODELS.length > 0 && !BUSY;
+  document.getElementById('btnPredict').disabled = !ready;
+  document.getElementById('btnCompare').disabled = !ready;
+  document.getElementById('btnClear').disabled = BUSY;
 }
+
+function setBusy(busy) { BUSY = busy; refreshButtons(); }
 
 async function doPredict() {
   const text = document.getElementById('inputText').value.trim();
   const model = document.getElementById('modelSelect').value;
   const box = document.getElementById('resultBox');
   document.getElementById('compareBox').style.display = 'none';
-  if (!text) { alert('请输入文本'); return; }
-  if (!model) { alert('暂无可用模型'); return; }
+  if (!text || !model) { refreshButtons(); return; }
 
   box.style.display = 'block';
   box.className = 'result';
@@ -238,8 +243,7 @@ async function doCompare() {
   const text = document.getElementById('inputText').value.trim();
   const box = document.getElementById('compareBox');
   document.getElementById('resultBox').style.display = 'none';
-  if (!text) { alert('请输入文本'); return; }
-  if (MODELS.length === 0) { alert('暂无可用模型'); return; }
+  if (!text || MODELS.length === 0) { refreshButtons(); return; }
 
   box.style.display = 'block';
   setBusy(true);
