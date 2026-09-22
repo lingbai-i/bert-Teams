@@ -19,10 +19,20 @@ TRAIN_FILE = DATA_DIR / "train.txt"
 DEV_FILE = DATA_DIR / "dev.txt"
 TEST_FILE = DATA_DIR / "test.txt"
 EVAL_FILE = DATA_DIR / "eval" / "test_queries.jsonl"
+STOPWORD_FILE = DATA_DIR / "stopwords.txt"
+
+# 权威模型权重：全量训练产物由组长确认后统一放在 models/ 下，评估环节只认这一份，
+# 避免“每人一个 best.pt”导致指标无法对齐（见 README「模型产物规范」）。
+# models/ 已被 .gitignore 排除，权重通过网盘/即时通讯分发，不进仓库。
+BEST_CKPT = ROOT / "models" / "best.pt"
+
+# badcase 归因分析（人工撰写）：文件存在时由 evaluate 追加到 badcases.txt 末尾，
+# 这样重跑评估不会丢失结论，结论也不必硬编码进代码。
+BADCASE_NOTES_FILE = DATA_DIR / "eval" / "badcase_notes.md"
 
 # 训练默认超参数（单位与取值范围见各训练脚本参数说明）
 MAX_LEN = 48        # 输入截断长度，单位 token；数据集文本较短，48 足够覆盖
 BATCH_SIZE = 32     # 批次大小；8GB 显存在 max_len=48 下可承受
 EPOCHS = 3          # 训练轮数
-LR = 2e-5           # AdamW 初始学习率
+LR = 1e-4           # AdamW 初始学习率
 SEED = 42           # 全局随机种子，保证实验可复现

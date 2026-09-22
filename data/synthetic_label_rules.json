@@ -1,0 +1,89 @@
+{
+  "version": "2026-09-21.3",
+  "note": "合成语料重分类规则表。本表只收录【真·矛盾标注】：同一个主题字符串在语料里被两个类别各标约一半样本，任何模型在这批样本上的期望上限只有 50%。规则执行方式见 scripts/clean_synthetic.py（去重 + 按最长短语优先重分类）。",
+  "convention_decision": {
+    "decided_at": "2026-09-21",
+    "decision": "7 个争议主题的归属统一采用现有权威权重 models/best.pt（sha256 3313804e…）的训练口径，不采用 knowledge_base 的部门归属裁定。",
+    "scope": "病假工资/育儿假/陪产假 -> hr_onboarding，加班费计算 -> finance_expense；其余 3 条（保密协议/竞业协议/合同模板 -> legal_contract）两套口径本来一致。",
+    "reason": "该口径与已训练好的权威权重一致，无需重训即可让数据与模型自洽，答辩前时间成本最低。",
+    "evidence_of_model_convention": "在未清洗测试集上按主题统计 best.pt 的预测分布：病假工资/育儿假/陪产假预测 hr_onboarding 一致性 100%，加班费计算预测 finance_expense 77%（50:50 的监督只会学到五五开分布，故一致性即训练口径）。",
+    "known_risk": "部署层是拿意图标签去检索 data/knowledge_base/<部门>/ 文档的：病假工资会命中 hr 目录、加班费计算会命中 finance 目录，而答案分别写在 policy/attendance.md 与 policy/overtime.md 里，现场 demo 有取错文档的风险。缓解方式（二选一，属部署组工作）：(1) 在 app/flask_app.py 的知识库路由层加‘主题 -> 文档目录’别名映射；(2) 把 policy/attendance.md 的假期待遇段落与 policy/overtime.md 的加班费段落同步到 hr/、finance/ 目录下。",
+    "revert": "若要改回 knowledge_base 口径，把本表这 4 条的 label 改回 policy_attendance，重跑 scripts/clean_synthetic.py 与三份评估即可（约 2 分钟），无需改代码。"
+  },
+  "rules": [
+    {
+      "phrase": "病假工资",
+      "label": "hr_onboarding",
+      "kind": "conflict",
+      "basis": "convention_decision",
+      "before": "hr_onboarding:328, policy_attendance:314",
+      "knowledge_base_note": "knowledge_base/policy/attendance.md 2.2 病假同时写了病假工资的发放比例；本表按团队口径决策归入薪酬福利侧（hr_onboarding）"
+    },
+    {
+      "phrase": "育儿假",
+      "label": "hr_onboarding",
+      "kind": "conflict",
+      "basis": "convention_decision",
+      "before": "hr_onboarding:328, policy_attendance:325",
+      "knowledge_base_note": "knowledge_base/policy/attendance.md 2.4 其他假期列有育儿假；本表按团队口径决策归入 hr_onboarding"
+    },
+    {
+      "phrase": "陪产假",
+      "label": "hr_onboarding",
+      "kind": "conflict",
+      "basis": "convention_decision",
+      "before": "hr_onboarding:339, policy_attendance:322",
+      "knowledge_base_note": "knowledge_base/policy/attendance.md 2.4 其他假期列有陪产假；本表按团队口径决策归入 hr_onboarding"
+    },
+    {
+      "phrase": "加班费计算",
+      "label": "finance_expense",
+      "kind": "conflict",
+      "basis": "convention_decision",
+      "before": "policy_attendance:328, finance_expense:326",
+      "knowledge_base_note": "knowledge_base/policy/overtime.md 的章节标题即《加班费计算》；本表按团队口径决策归入 finance_expense"
+    },
+    {
+      "phrase": "保密协议",
+      "label": "legal_contract",
+      "kind": "conflict",
+      "basis": "knowledge_base",
+      "before": "legal_contract:319, hr_onboarding:313",
+      "knowledge_base_note": "knowledge_base/legal/confidential.md 章节标题《保密协议》，两套口径一致"
+    },
+    {
+      "phrase": "竞业协议",
+      "label": "legal_contract",
+      "kind": "conflict",
+      "basis": "knowledge_base",
+      "before": "legal_contract:329, hr_onboarding:303",
+      "knowledge_base_note": "knowledge_base/legal/confidential.md 章节标题《竞业限制》，两套口径一致"
+    },
+    {
+      "phrase": "合同模板",
+      "label": "legal_contract",
+      "kind": "conflict",
+      "basis": "knowledge_base",
+      "before": "sales_marketing:324, legal_contract:309",
+      "knowledge_base_note": "knowledge_base/legal/contract.md 1.2 模板：常用模板见 OA 法务模板库，两套口径一致"
+    }
+  ],
+  "dropped_candidates": [
+    {
+      "phrase": "盖章",
+      "reason": "不是矛盾标注。合同盖章（legal_contract 346 条）与盖章流程（admin_logistics 331 条）是两个不同的主题字符串，各自内部标签一致，属于部门职责切分而非标注重叠；强行统一会让模型已经学会的区分变成“错误”。"
+    },
+    {
+      "phrase": "劳动仲裁",
+      "reason": "不是矛盾标注。该主题在语料中 100% 属于 hr_onboarding（386 条），legal_contract 的 336 条是另一个主题“仲裁申请”，二者字符串不同。先前误判源于按子串“仲裁”统计而未区分主题边界。"
+    },
+    {
+      "phrase": "产假工资",
+      "reason": "不是矛盾标注：语料中 100% 属于 hr_onboarding（391 条），且与本次口径决策（假期待遇归人事）一致，无需改动。"
+    },
+    {
+      "phrase": "年假计算",
+      "reason": "不是矛盾标注：语料中 100% 属于 hr_onboarding（327 条），属口径选择而非矛盾，未强制改动。"
+    }
+  ]
+}
