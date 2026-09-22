@@ -25,6 +25,8 @@ def load_labels(class_file: Path) -> List[str]:
     异常:
         FileNotFoundError: 文件不存在时抛出，调用方需先确认数据已就位。
     """
+    # 标签名会作为 API 返回值与 jsonl 标签映射的键，必须去掉行尾换行符，
+    # 否则 predict 返回 "policy_attendance\n"、evaluate 按名字建映射时全部查不到
     text = class_file.read_text(encoding="utf-8")
     return [line.strip() for line in text.splitlines() if line.strip()]
 
@@ -40,20 +42,36 @@ def load_txt(path: Path) -> Tuple[List[str], List[int]]:
     """
     texts, labels = [], []
     with open(path, encoding="utf-8") as f:
-        for line in f:
+        for line_no, line in enumerate(f, 1):
             line = line.rstrip("\r\n")
-            if "\t" not in line:
+            if not line or "\t" not in line:
                 continue
-            text, label = line.rsplit("\t", 1)
+
+            text, label_str = line.rsplit("\t", 1)
+            text = text.strip()
+
+            # 跳过空文本
+            if not text:
+                continue
+
+            # 标签非整数说明数据文件被污染，直接失败并给出定位信息；
+            try:
+                label = int(label_str)
+            except ValueError as exc:
+                raise ValueError(
+                    f"{path} 第 {line_no} 行标签非法: {label_str!r}，请核对数据格式（文本\\t标签ID）"
+                ) from exc
+
             texts.append(text)
-            labels.append(int(label))
+            labels.append(label)
+
     return texts, labels
 
 
 def subsample(
     texts: List[str], labels: List[int], n: int, seed: int
 ) -> Tuple[List[str], List[int]]:
-    """从数据集中有放回无关地随机抽取 n 条（n 超过总量时返回全集的乱序副本）。
+    """有放回随机抽取 n 条（n 超过总量时返回全集的乱序副本）。
 
     参数:
         texts: 文本列表。
@@ -62,11 +80,16 @@ def subsample(
         seed: 随机种子，保证 mini 训练可复现。
 
     返回:
-        (文本列表, 标签 ID 列表)，长度为 min(n, 总量)。
+       长度均为 n；有放回抽样可能包含重复样本。
     """
-    idx = list(range(len(texts)))
-    random.Random(seed).shuffle(idx)
-    idx = idx[:n]
+    # 边界条件：如果原数据为空，直接返回空列表，避免报错
+    if not texts:
+        return [], []
+
+    # 用局部 RNG 而非全局 random：既保证同 seed 可复现，也不改变其他模块的随机序列
+    rng = random.Random(seed)
+    # choices 是有放回抽样：同一样本可被多次抽出，返回长度恒为 n
+    idx = rng.choices(range(len(texts)), k=max(n, 0))
     return [texts[i] for i in idx], [labels[i] for i in idx]
 
 
@@ -123,3 +146,6 @@ def build_dataloader(
     """
     ds = IntentDataset(texts, labels, tokenizer, max_len)
     return DataLoader(ds, batch_size=batch_size, shuffle=shuffle)
+
+
+

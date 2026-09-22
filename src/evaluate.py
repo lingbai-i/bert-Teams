@@ -289,11 +289,16 @@ def main(args) -> None:
     acc = accuracy_score(gold, preds)
     macro_f1 = f1_score(gold, preds, average="macro")
     weighted_f1 = f1_score(gold, preds, average="weighted")
-    report = classification_report(gold, preds, target_names=label_names, digits=4)
-    report_dict = classification_report(gold, preds, target_names=label_names,
-                                        digits=4, output_dict=True)
-    # labels 显式给出全部类别，避免某类在预测中缺席时矩阵维度收缩、与标签名错位
-    cm = confusion_matrix(gold, preds, labels=list(range(len(label_names))))
+    # 评估集可能不包含全部类别（如小规模人工评估集），
+    # 必须显式传入 labels 让报告/混淆矩阵/per_class_f1 对齐完整标签体系
+    all_ids = list(range(len(label_names)))
+    report = classification_report(gold, preds, labels=all_ids,
+                                   target_names=label_names, digits=4,
+                                   zero_division=0)
+    report_dict = classification_report(gold, preds, labels=all_ids,
+                                        target_names=label_names, digits=4,
+                                        zero_division=0, output_dict=True)
+    cm = confusion_matrix(gold, preds, labels=all_ids)
 
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
